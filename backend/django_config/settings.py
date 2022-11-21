@@ -133,4 +133,4 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
 )
 
-REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
+# REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
