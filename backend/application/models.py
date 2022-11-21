@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from cv import models as cv_models
+from job_posting.models import JobPost
 
 # Create your models here.
 class Application(models.Model):
@@ -12,8 +13,8 @@ class Application(models.Model):
         ('accepted', 'Accepted'),
     ]
      
-    job_posting = models.ForeignKey('job_posting.Job_posting', related_name='applications', on_delete=models.SET_NULL)
-    cv = models.ForeignKey(cv_models.CV, related_name='applications', on_delete=models.SET_NULL)
+    job_posting = models.ForeignKey(JobPost, related_name='applications', on_delete=models.DO_NOTHING)
+    cv = models.ForeignKey(cv_models.CV, related_name='applications', on_delete=models.DO_NOTHING)
     
     application_date = models.DateTimeField(default=datetime.now())
     notes = models.TextField(blank=True, max_length=2500)

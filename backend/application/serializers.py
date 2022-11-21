@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from .models import *
 from cv.serializers import DefaultCvSerializer
-from job_posting.serializers import DefaultPostingSerializer
+from job_posting.serializers import PostingSerializer
 
         
 class ApplicationSerializer(serializers.ModelSerializer):
     cv = DefaultCvSerializer(many=True)
-    # job_posting = DefaultJobPostingSerializer(many=True)
+    job_posting = PostingSerializer(many=True)
     
     class Meta:
         model = Application

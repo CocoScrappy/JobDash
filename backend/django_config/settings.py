@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'user',
     'cv',
     'application',
-    'posting',
+    'job_posting',
     'corsheaders',
     'rest_framework',
 ]
