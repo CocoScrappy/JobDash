@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from .models import User
-from cv.serializers import *
+from cv_basic.serializers import *
 from job_posting.serializers import *
 from application.serializers import *
 
 class UserSerializer(serializers.ModelSerializer):
-    cvs = CvSerializer(many=True)
+    cvs = DefaultCvSerializer(many=True)
     postings = PostingSerializer(many=True)
     applications = DefaultApplicationSerializer(many=True)
     
