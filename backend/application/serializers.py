@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-from cv.serializers import DefaultCvSerializer
+from cv_basic.serializers import DefaultCvSerializer
 from job_posting.serializers import PostingSerializer
 
         
