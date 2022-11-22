@@ -5,13 +5,14 @@ from job_posting.serializers import *
 from application.serializers import *
 
 class UserSerializer(serializers.ModelSerializer):
-    cvs = DefaultCvSerializer(many=True)
+    cvs = CvSerializer(many=True)
     postings = PostingSerializer(many=True)
     applications = DefaultApplicationSerializer(many=True)
     
     class Meta:
         model = User
         fields = '__all__'
+        depth = 2
         
 class DefaultUserSerializer(serializers.ModelSerializer):
     class Meta:
