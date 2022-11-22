@@ -1,9 +1,9 @@
 from django.db import models
 
 # Create your models here.
-class Applicant(models.Model):
+class User(models.Model):
     USER_ROLES = [
-        ('applicant', 'Applicant'),
+        ('user', 'User'),
         ('employer', 'Employer'),
         ('admin', 'Admin'),
     ]
@@ -15,8 +15,8 @@ class Applicant(models.Model):
     role = models.CharField(
         max_length=15,
         choices=USER_ROLES,
-        default= 'applicant',
+        default= 'user',
     )
     
     def __str__(self):
-        return "Name: {firstname} {lastname}; Email: {email}".format(self.firstname, self.lastname, self.email)
+        return "Name: {first_name} {last_name}; Email: {email}".format(first_name = self.first_name, last_name = self.last_name, email = self.email)

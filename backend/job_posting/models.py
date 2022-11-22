@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime
-from user.models import User
+from django_config import settings
 
 # Create your models here.
 class JobPost(models.Model):
@@ -10,7 +10,7 @@ class JobPost(models.Model):
         ('in-person', 'In-Person'),
     ]
      
-    employer = models.ForeignKey(User, related_name='job_postings', on_delete=models.DO_NOTHING)
+    employer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     
     title = models.CharField(max_length=250)
     logo_url = models.URLField(blank=True)
