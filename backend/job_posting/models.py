@@ -10,7 +10,7 @@ class JobPost(models.Model):
         ('in-person', 'In-Person'),
     ]
      
-    employer = models.ForeignKey(User, related_name='job_postings', on_delete=models.DO_NOTHING)
+    employer = models.ForeignKey(User, related_name='postings', on_delete=models.DO_NOTHING)
     
     title = models.CharField(max_length=250)
     logo_url = models.URLField(blank=True)
