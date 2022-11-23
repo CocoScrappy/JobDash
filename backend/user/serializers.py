@@ -6,7 +6,7 @@ from application.serializers import *
 
 class UserSerializer(serializers.ModelSerializer):
     cvs = DefaultCvSerializer(many=True)
-    postings = PostingSerializer(many=True)
+    postings = DefaultJobPostSerializer(many=True)
     applications = DefaultApplicationSerializer(many=True)
     
     class Meta:

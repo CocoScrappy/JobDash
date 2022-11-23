@@ -18,12 +18,12 @@ from django.urls import path, include
 from user.urls import user_router
 from cv_basic.urls import cv_router
 from application.urls import application_router
-from job_posting.urls import job_posting_router
+from job_posting.urls import jobpost_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include(user_router.urls)),
     path("api/", include(cv_router.urls)),
     path("api/", include(application_router.urls)),
-    path("api/", include(job_posting_router.urls)),
+    path("api/", include(jobpost_router.urls)),
 ]
