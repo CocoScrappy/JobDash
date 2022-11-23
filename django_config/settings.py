@@ -9,6 +9,9 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+# from azure.identity import DefaultAzureCredential
+# from azure.keyvault.secrets import SecretClient
+# import os
 
 from pathlib import Path
 
@@ -81,10 +84,29 @@ WSGI_APPLICATION = 'django_config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# Azure Key Vault - make work later
+# credential = DefaultAzureCredential()
+# client = SecretClient(
+#     vault_url="https://jobdash-kv.vault.azure.net/",
+#     credential=credential
+# )
+# db_secret = client.get_secret("jobdash-db-pass")
+
+#Env variables - use for now
+
+
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'jobdash-db',
+        'USER': 'AdminFSD04',
+        'PASSWORD': '11^9v2s#T&O#',
+        'HOST': 'jobdash-mysql-db.mysql.database.azure.com',
+        'PORT': '3306',
     }
 }
 
