@@ -1,9 +1,9 @@
 from django.db import models
-from user.models import User
+from django_config import settings
 
 # Create your models here.
 class CV(models.Model):
-    user = models.ForeignKey(User, related_name='cvs', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
     
     def __str__(self):
