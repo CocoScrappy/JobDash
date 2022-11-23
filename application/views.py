@@ -5,7 +5,7 @@ from .models import Application
 
 # Create your views here.
 class ApplicationView(viewsets.ModelViewSet):
-    serializer_class = serializers.ApplicationSerializer
+    serializer_class = serializers.DefaultApplicationSerializer
     queryset = Application.objects.all()
     
 class DefaultApplicationView(viewsets.ModelViewSet):

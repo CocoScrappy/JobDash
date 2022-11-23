@@ -1,16 +1,16 @@
 from rest_framework import serializers
 from .models import *
 from application.serializers import DefaultApplicationSerializer
- 
-class DefaultJobPostSerializer(serializers.ModelSerializer):
+
+      
+class DefaultCvSerializer(serializers.ModelSerializer):
     class Meta:
-        model = JobPost
+        model = CvBasic
         fields = '__all__'
-        
-class JobPostSerializer(serializers.ModelSerializer):
+
+class CvSerializer(serializers.ModelSerializer):
     applications = DefaultApplicationSerializer(many=True)
     
     class Meta:
-        model = JobPost
+        model = CvBasic
         fields = '__all__'
-        
