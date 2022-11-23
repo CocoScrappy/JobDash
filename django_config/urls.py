@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from user.urls import user_router
 from cv.urls import cv_router
 from cv_basic.urls import cv_router
 from application.urls import application_router
