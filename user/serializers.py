@@ -1,19 +1,40 @@
 from rest_framework import serializers
-from .models import User
-from cv_basic.serializers import *
-from job_posting.serializers import *
-from application.serializers import *
+from django.contrib.auth.password_validation import validate_password
+from django.core import exceptions
+from django.contrib.auth import get_user_model
+User=get_user_model()
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields=('first_name','last_name','email','password','summary','role',)
+    
+    def validate(self,data):
+        user=User(**data)
+        password=data.get('password')
+        try:
+            validate_password(password,user)
+        except exceptions.ValidationError as e:
+             serializer_errors=serializers.as_serializer_error(e)
+             raise exceptions.ValidationError(
+                {'password':serializer_errors['non_field_errors']}
+             )
+        return data
+
+    
+    def create(self,validated_data):
+        user = User.objects.create_user(
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            summary=validated_data['summary'],
+            role=validated_data['role']
+        )
+        
+        return user
 
 class UserSerializer(serializers.ModelSerializer):
-    cvs = DefaultCvSerializer(many=True)
-    postings = DefaultJobPostSerializer(many=True)
-    applications = DefaultApplicationSerializer(many=True)
-    
     class Meta:
-        model = User
-        fields = '__all__'
-        
-class DefaultUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
+        model=User
+        fields=('first_name','last_name','email','summary','role',)
