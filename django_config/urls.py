@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from user.urls import user_router
 from cv.urls import cv_router
 from cv_basic.urls import cv_router
 from application.urls import application_router
@@ -25,6 +26,7 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include('user.urls')),
+    path("api/", include(user_router.urls)),
     path("api/", include(cv_router.urls)),
     path("api/", include(application_router.urls)),
     path("api/", include(jobpost_router.urls)),

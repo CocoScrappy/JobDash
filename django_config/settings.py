@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'django_config.urls'
@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'django_config.wsgi.application'
 # )
 # db_secret = client.get_secret("jobdash-db-pass")
 
-#Env variables - use for now
+# Env variables - use for now
 
 
 DATABASES = {
@@ -161,14 +161,22 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
 )
 
+CORS_ALLOWED_ORIGINS  = (
+    'http://localhost:3000',
+)
+
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = list(default_headers) + []
+# CORS_ALLOW_ALL_ORIGINS = True
+
 # REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-         'rest_framework_simplejwt.authentication.JWTAuthentication'
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ]
 }
 
-SIMPLE_JWT={
+SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30)
 }
 
