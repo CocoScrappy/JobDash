@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self,first_name,last_name,email,summary,role,password=None):
+    def create_user(self,first_name,last_name,email,role,summary=None,password=None):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -22,7 +22,7 @@ class UserAccountManager(BaseUserManager):
         
         return user
 
-    def create_superuser(self,first_name,last_name,email,summary,role,password=None):
+    def create_superuser(self,first_name,last_name,email,role,summary=None,password=None):
         user = self.model(
             email=email,
             first_name=first_name,
@@ -45,7 +45,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
     email = models.EmailField(max_length=250, unique=True)
-    summary = models.CharField(max_length=500, null=True)
+    summary = models.CharField(max_length=500,default="", blank=True)
     password = models.CharField(max_length=250)
     role = models.CharField(
         max_length=15,

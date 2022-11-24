@@ -1,7 +1,9 @@
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from .serializers import UserCreateSerializer,UserSerializer
+from .models import UserAccount
 
 class RegisterView(APIView):
     def post(self,request):
@@ -34,3 +36,7 @@ class RetrieveUserView(APIView):
         user=UserSerializer(user)
 
         return Response(user.data,status=status.HTTP_200_OK)
+
+class UsersView(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = UserAccount.objects.all()

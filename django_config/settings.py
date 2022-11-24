@@ -14,6 +14,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 # import os
 
 from datetime import timedelta
+import os
+import django_heroku
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!w8e(9y1gn)s7=1y@vxr0sgyu$v8x2_1#$)nc@g#$l(1%b8z%*'
+SECRET_KEY = 'django-insecure-!w8e(9y1gn)s7=1y@vxr0sgyu$v8x2_1#$)nc@g#$l(1%b8z%*'#os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'django_config.urls'
@@ -93,7 +95,7 @@ WSGI_APPLICATION = 'django_config.wsgi.application'
 # )
 # db_secret = client.get_secret("jobdash-db-pass")
 
-#Env variables - use for now
+# Env variables - use for now
 
 
 DATABASES = {
@@ -157,17 +159,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # whitelisting React port
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
+    'https://cocoscrappy.github.io'
 )
+
+CORS_ALLOWED_ORIGINS  = (
+    'http://localhost:3000',
+    'https://cocoscrappy.github.io'
+)
+
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = list(default_headers) + ['email']
+#CORS_ALLOW_ALL_ORIGINS = True
 
 # REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-         'rest_framework_simplejwt.authentication.JWTAuthentication'
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ]
 }
 
-SIMPLE_JWT={
+SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30)
 }
 
 AUTH_USER_MODEL='user.UserAccount'
+
+django_heroku.settings(locals())
