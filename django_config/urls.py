@@ -19,7 +19,8 @@ from cv.urls import cv_router
 from cv_basic.urls import cv_router
 from application.urls import application_router
 from job_posting.urls import jobpost_router
-from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView,TokenVerifyView)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView, TokenRefreshView, TokenVerifyView)
 
 
 urlpatterns = [
