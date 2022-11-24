@@ -168,7 +168,7 @@ CORS_ALLOWED_ORIGINS  = (
 )
 
 from corsheaders.defaults import default_headers
-CORS_ALLOW_HEADERS = list(default_headers) + []
+CORS_ALLOW_HEADERS = list(default_headers) + ['email']
 #CORS_ALLOW_ALL_ORIGINS = True
 
 # REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
