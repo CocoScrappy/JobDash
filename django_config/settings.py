@@ -159,19 +159,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # whitelisting React port
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
-    'https://cocoscrappy.github.io/jobdash-front/',
-    'https://cocoscrappy.github.io/'
+    'https://cocoscrappy.github.io/jobdash-front',
+    'https://cocoscrappy.github.io'
 )
 
 CORS_ALLOWED_ORIGINS  = (
     'http://localhost:3000',
-    'https://cocoscrappy.github.io/jobdash-front/',
-    'https://cocoscrappy.github.io/'
+    'https://cocoscrappy.github.io/jobdash-front',
+    'https://cocoscrappy.github.io'
 )
 
 from corsheaders.defaults import default_headers
 CORS_ALLOW_HEADERS = list(default_headers) + []
-# CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
 
 # REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
 REST_FRAMEWORK = {
