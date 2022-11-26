@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.contrib.auth import get_user_model
+from cv_basic.serializers import DefaultCvSerializer
 User=get_user_model()
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -50,3 +51,9 @@ class UserSerializer(serializers.ModelSerializer):
         )
         
         return user
+    
+class UserWithCVSerializer(serializers.ModelSerializer):
+    cv = DefaultCvSerializer(many=False)
+    class Meta:
+        model=User
+        fields=('id','first_name','last_name','email','summary','role', 'password',)

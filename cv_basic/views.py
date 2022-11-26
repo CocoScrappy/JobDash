@@ -15,11 +15,12 @@ class CvsView(viewsets.ModelViewSet):
     def get_user_cvs(self, request):
         email = request.headers.get("email")
         user = UserAccount.objects.get(email=email)
-        cvs = CvBasic.objects.filter(user=user).values()
+        cvs = CvBasic.objects.get(user=user)
+        cvs_serializer = serializers.DefaultCvSerializer(cvs)
 
         # cvs=serializers.DefaultCvSerializer("json", list(cvs), many=True)
         # print(cvs)
         
-        return Response(cvs, status=status.HTTP_200_OK)
+        return Response(cvs_serializer.data, status=status.HTTP_200_OK)
     
     
