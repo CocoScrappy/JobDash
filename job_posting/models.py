@@ -19,7 +19,7 @@ class JobPost(models.Model):
     logo_url = models.URLField(null=True)
     location = models.CharField(max_length=100)
     description = models.TextField(blank=False)
-    company = models.CharField(max_length=60, default='')
+    company = models.CharField(max_length=60, default='', blank=True)
     date_created = models.DateTimeField(default=datetime.now())
 
     remote_option = models.CharField(
