@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from . import serializers
@@ -8,6 +8,7 @@ from user.models import UserAccount
 
 # Create your views here.
 class CvsView(viewsets.ModelViewSet):
+    permission_classes=[permissions.IsAuthenticated]
     serializer_class = serializers.DefaultCvSerializer
     queryset = CvBasic.objects.all()
     
