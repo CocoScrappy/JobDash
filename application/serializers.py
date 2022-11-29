@@ -9,7 +9,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = Application
         fields = '__all__'
         
-class DefaultApplicationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Application
-        fields = '__all__'
+# class DefaultApplicationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Application
+#         fields = '__all__'
