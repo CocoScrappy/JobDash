@@ -26,5 +26,6 @@ class Application(models.Model):
     status = models.CharField(
         max_length=30,
         choices=STATUSES,
+        default='applied',
     )
     

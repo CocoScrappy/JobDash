@@ -5,9 +5,6 @@ from job_posting.serializers import JobPostSerializer
 
         
 class ApplicationSerializer(serializers.ModelSerializer):
-    cv = DefaultCvSerializer(many=True)
-    job_posting = JobPostSerializer(many=True)
-    
     class Meta:
         model = Application
         fields = '__all__'
