@@ -1,0 +1,5 @@
+Team 3:
+Amir: Helped with finding an efficient way to do admin crud using django 
+
+Team 5:
+Jia: You helped us figure out that the data we were receiving from the backend was not formatted properly, and you allowed us to parse the data in a better way. 
