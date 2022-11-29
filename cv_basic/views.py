@@ -14,7 +14,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class CvsView(viewsets.ModelViewSet):
-    permission_classes=[permissions.IsAuthenticated]
+    # permission_classes=[permissions.IsAuthenticated]
     serializer_class = serializers.DefaultCvSerializer
     queryset = CvBasic.objects.all()
     
@@ -57,6 +57,4 @@ class CvsView(viewsets.ModelViewSet):
             return Response({"message": "Cannot find a CV for the requested user"},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # cvs=serializers.DefaultCvSerializer("json", list(cvs), many=True)
-        # print(cvs)
 
