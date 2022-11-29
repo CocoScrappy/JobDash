@@ -16,10 +16,11 @@ class JobPostView(viewsets.ModelViewSet):
     queryset = JobPost.objects.all()
 
 class JobSearchView(APIView):
-    # serializer_class = serializers.JobPostSerializer
+    serializer_class = serializers.JobPostSerializer
 
 
     def get(self,request,par):
         searchTerms=par
-        # query=self.request.GET.get('search')
-        return Response(searchTerms,status=status.HTTP_200_OK)
+
+        query=JobPost.objects.get(title__icontains=searchTerms)
+        return Response(query,status=status.HTTP_200_OK)

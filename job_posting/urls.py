@@ -8,5 +8,5 @@ jobpost_router.register(r'postings', views.JobPostView, 'posting')
 # jobpost_router.register(r'', views.JobSearchView, 'posting')
 
 urlpatterns = [
-    path('postings/search/<int:par>/',views.JobSearchView.as_view())
+    path('postings/search/<str:par>/',views.JobSearchView.as_view())
 ]
