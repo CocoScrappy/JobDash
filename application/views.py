@@ -28,11 +28,11 @@ class ApplicationView(viewsets.ModelViewSet):
             else:
                 data = []
                 for application in applications:
-                    job_posting_data = JobPostSerializer(
-                        application.job_posting).data
-                    job_posting_data['application'] = self.get_serializer(
+                    application_data = self.get_serializer(
                         application).data
-                    data.append(job_posting_data)
+                    application_data["job_posting"] = JobPostSerializer(
+                        application.job_posting).data
+                    data.append(application_data)
                 print(data)
                 return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
