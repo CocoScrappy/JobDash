@@ -1,0 +1,883 @@
+November 28, 2022 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- Built mockup & prototype for User: Job Applicant (https://www.figma.com/file/RmGeI03fjYLnkU3SgDzz5k/JobDash?node-id=5%3A269&t=iflVIruGQeJyzW0L-1)  
+
+- Would still need to design calendar and CV page layouts + User: Employer pages 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Add child tasks to Jira task cards that need styling 
+
+- Dip my feet into the project by styling Login/Register 
+
+- Finish Job Applicant pageson Figma 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+User story: a user can create a CV  
+
+user can get, create, and update cv using login token 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+User story: a user can view list of applications they did 
+
+User story: a user can view an application detail 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+Finished jobposting update, create, delete 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Either backend tests or do more front end 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Added pagination, created a route that accepts parameters 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Keep working on the search function, make Jira and scrum modifications 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+How to return a Django object into JSON 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+- Created a transfer from joblistings to application 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- Save application to db on submit 
+
+- Notify user on application submit 
+
+- Hide secrets 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Django view by Id – not needed 
+
+ 
+
+ 
+
+November 26, 2022 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+User story: a user can view and edit a CV 
+
+created userCV page (need debugging rich text editor initial state) 
+
+user can view, edit and preview cv 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+User story: a user can create a CV 
+
+user can get, create, and update cv using login token 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Reviewed react and started writing react code for Applications – pages and markup 
+
+Hide secrets  
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Start working on Application forms 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Django view by Id – not needed 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Made the navbar responsive, created protected routes 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Create a search function for job postings and job applications 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Making custom queries in Django 
+
+ 
+
+November 25, 2022 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+Help Dmitry with deployment 
+
+Add envirment variables for backend URL 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+User story: a user can view and edit a CV 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Implemented global contexts with the use of zustand 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Have the navbar be responsive to logging in and logging out 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Figuring out react hooks 
+
+ 
+
+November 24, 2022 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+User Story: a user can view their list of CVs 
+
+Help Dmitry with deployment 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Help Dmitry with deployment 
+
+Add envirment variables for backend URL 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Alina 
+
+* Due to personal & family reasons, have not accomplished scrum tasks, will have aim to have mockups done by the end of the week * 
+
+1.What I have done / not done since last Scrum? 
+
+- Still working on the React/Django Notes App tutorial 
+
+- Have not yet begun the UI kit / mockups 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Focus more on React than Django in tutorial 
+
+-  Look into state management options (Zustand and React Query as alternative to Redux which is older and more complicated) 
+
+- Build site map, UI kit, and Mockups  
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- The tasks listed above will realistically take more than 1 day to do so I will repeat the same scrum at least until Wednesday 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- create job posting page 
+
+- listing job postings 
+
+- posting job posting 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- onboard Alina? 
+
+- continue on postings 
+
+- possibly look into context? 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Created a login where you can get the tokens and registration where you can register a new user 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Decide how I’m going to maintain state 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+How to parse information from the JWT 
+
+ 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Deployed the backend on Heroku 
+
+Deployed Front end and troubleshooted with the team how to make front and back communicate 
+
+Hide secrets – Not done 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Review react and write react code for Applications 
+
+Hide secrets 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Moral support and prayers 
+
+ 
+
+ 
+
+ 
+
+November 23, 2022 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+Add basic CV app  
+
+Test all basic backend routes (cv, applications, users, jobpost)  
+
+tested all CRUD routes from frontend using axios and RESTframework  
+
+Help Dmitry with Deployment 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+User Story: a user can view their list of CVs 
+
+Help Dmitry with deployment 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Alina 
+
+* Due to personal & family reasons, have not accomplished scrum tasks, will have aim to have mockups done by the end of the week * 
+
+1.What I have done / not done since last Scrum? 
+
+- Still working on the React/Django Notes App tutorial 
+
+- Have not yet begun the UI kit / mockups 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Focus more on React than Django in tutorial 
+
+-  Look into state management options (Zustand and React Query as alternative to Redux which is older and more complicated) 
+
+- Build site map, UI kit, and Mockups  
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- The tasks listed above will realistically take more than 1 day to do so I will repeat the same scrum at least until Wednesday 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- django unit test tutorials 
+
+- selenium testing  
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- basic front end functionnalities?  
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Splitting project into two repos,looked for tutoirals, connected the database 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Deploy the backend on Heroku and front end, figure out how the front end would be communicating with the backend, hide secrets 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Moral support and prayers 
+
+ 
+
+November 22, 2022 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+Familiarize myself in using Python 
+
+Created backend Django apps for application, user, cv, job posting 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Add basic CV app 
+
+Test all basic backend routes (cv, applications, users, jobpost) 
+
+tested all CRUD routes from frontend using axios and RESTframework 
+
+Help Dmitry with Deployment 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Alina 
+
+* Due to personal & family reasons, have not accomplished scrum tasks, will have aim to have mockups done by the end of the week * 
+
+1.What I have done / not done since last Scrum? 
+
+- Still working on the React/Django Notes App tutorial 
+
+- Have not yet begun the UI kit / mockups 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Focus more on React than Django in tutorial 
+
+-  Look into state management options (Zustand and React Query as alternative to Redux which is older and more complicated) 
+
+- Build site map, UI kit, and Mockups  
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- The tasks listed above will realistically take more than 1 day to do so I will repeat the same scrum at least until Wednesday  
+
+ 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Integrated Ali’s models with a baseUser model 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Create login/register that works with the user model 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Everything is still shaky right now 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- finished django tutorial 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- learning about django test 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Failed attempt to make Django serve static files from Heroku – mission abort/ didn’t look into connecting the database 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Look into other options, perhaps splitting project into two and hosting separately, look into Git Submodules, connect the database 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Moral support and prayers 
+
+ 
+
+ 
+
+November 21, 2022 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+Familiarize myself in using Python 
+
+find the way to call Django API/DB (backend) from React (frontend) 
+
+created a new model applicants 
+
+added sequalizer and views 
+
+added url to routes 
+
+simple test on react to fetch data from db 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Familiarize myself in using Python 
+
+create base model for the application 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- Still working on the React/Django Notes App tutorial 
+
+- Have not yet begun the UI kit / mockups 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Focus more on React than Django in tutorial 
+
+-  Look into state management options (Zustand and React Query as alternative to Redux which is older and more complicated) 
+
+- Build site map, UI kit, and Mockups  
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- The tasks listed above will realistically take more than 1 day to do so I will repeat the same scrum at least until Wednesday  
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- part 1-2 django/redux/react 
+
+- started part 3 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- finish the serie 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Launched and tested 2 potential scaffolds for Authentication, tried deploying empty project on Heroku and Azure 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Continue trying to deploy the projects on either Heroku or Azure. Connect a MySQL db 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Moral support and prayers 
+
+ 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Continued work on user registration with Django 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Everything is still shaky right now 
+
+ 
+
+November 20, 2022 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- Still working on the React/Django Notes App tutorial 
+
+- Have not yet begun the UI kit 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Keep working on the tutorial but I will have limited time this weekend... 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- N/A 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Refreshed on Python (1 hr) 
+
+Finished a tutorial on CRUD using react and Django 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Familiarize myself in using Python 
+
+find the way to call Django API/DB (backend) from React (frontend) 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- Django and react Todolist Tutorial 
+
+- started tech with tim tutorial 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- finish tech with tim tuto 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Using what we learned to build something and host it ? 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Downloaded and launched a couple projects on local, found resources for deployment 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Practice deploying existing projects from Github for easier deployment of our own project later in the evening 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Moral support and prayers 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Continued work on user registration with Django 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Divide user stories and begin work on relevant parts 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Everything is still shaky right now 
+
+ 
+
+November 18, 2022 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+Did 80% of vscode tutorials 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Move on to Todo App React & Django * 
+
+I’d like to do the tech with tim tutorial if I have time as well 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+NaN 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Completed 5 hours of Python tutorials 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Begin work on login and registration 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Everything 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Followed the Python and Django tutorials, started on reviewing React 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Complete one of the tutorials for login + crud (React+django) and plan which feature to implement next 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Moral support and prayers 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Performed Python and Django tutorials in VScode 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Familiarize myself in using Python classes 
+
+Follow a couple of tutorials on CRUD with Django + React 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- VSCode tutorials for Python & React 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- Complete React/Django Notes App tutorial 
+
+- Start UI kit 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- N/A 
+
+ 
+
+ 
+
+November 17, 2022 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+Read python codecademy 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Django vscode tutorials 
+
+Reading Django Security documentations 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+NaN 
+
+November 15-16, 2022 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+Created ERD for proposal. 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Follow this tutorial for Django: https://docs.djangoproject.com/en/4.1/intro/tutorial01/ 
+
+Refresh my python 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+NaN 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Created Scrum File, Created Jira Project, Installed Python, Wrote the description for the proposal 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Follow this tutorial for Django: https://docs.djangoproject.com/en/4.1/intro/tutorial01/ 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+TBD 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Created use case diagram, installed Python 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Read about Django and try some tutorials 
+
+Familiarize myself in using Python in VScode 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+Helped with ERD, set up github and git ignore, started briefly looking into hosting 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Follow the Python and Django tutorials, start on react 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- Reaserched design ideas for the project on Dribbble.com 
+
+- Compelted the Mockup section for the proposal  
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- Follow Python & Django tutorials, look into React with Django/Python back end 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- N/A 
+
+ 
+
+ 
