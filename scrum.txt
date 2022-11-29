@@ -1,6 +1,86 @@
-November 28, 2022 
+November 29, 2022 
 
  
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Worked on search function 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Create a front-end for search and finish the backend for it 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+nothing 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+User story: a user can view list of applications they did  
+
+Not done 
+
+User story: a user can view an application detail 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+User story: a user can view an application detail 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- Finishing up a REACT course 
+
+- Didn’t get started with yesterday’s tasks, going to take advantage of mornings (while I have babysitting help for Noah) to catch up.  
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Finish React Course 
+
+- Dip my feet into the project by styling Login/Register 
+
+- Finish Job Applicant pages on Figma 
+
+- Will have more to share tomorrow 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- It’s just been hard with scheduling around my son lately. I’ve been too exhausted in the evenings to work much because I need to wake up so early for him and the accumulated sleep deprivation is getting to me. I'm going to try catching up in the mornings on work because it’s the most productive time while he’s being babysat. Once I get the ball rolling on my end and know what I’m doing, I’ll put in those late hours towards the end of the week and next week for sure. I promise you will have a beautiful app :) 
+
+ 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+Created unit test in backend for user models 
+
+Failed to create test for cv views 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Role and user based job application functions 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+November 28, 2022  
 
 Alina 
 
