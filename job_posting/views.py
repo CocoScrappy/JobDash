@@ -22,27 +22,6 @@ class JobPostView(viewsets.ModelViewSet):
     serializer_class = serializers.JobPostSerializer
     queryset = JobPost.objects.all()
 
-class JobSearchView(APIView):
-    serializer_class = serializers.JobPostSerializer
-
-
-    def get(self,request,par):
-        
-        searchTerms=par.split()
-        query=None
-        for t in searchTerms:
-            q=JobPost.objects.filter(Q(title__icontains=t)|Q(description__icontains=t))
-            
-            if query==None:
-                query=q
-            else:
-                query=query|q
-        
-        jsonquery=json.loads(serialize('json',query))
-        
-
-        print(searchTerms, file=sys.stderr)
-        return Response(jsonquery,status=status.HTTP_200_OK)
     @action(detail=False, methods=['get'], url_path="get_user_postings")
     def get_user_job_postings(self, request):
         try:
@@ -63,9 +42,31 @@ class JobSearchView(APIView):
                 for post in userPosts:
                     posting = self.get_serializer(post).data
                     data.append(posting)
-                # print(data)
+                print(data)
                 return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class JobSearchView(APIView):
+    serializer_class = serializers.JobPostSerializer
+
+    def get(self, request, par):
+
+        searchTerms = par.split()
+        query = None
+        for t in searchTerms:
+            q = JobPost.objects.filter(
+                Q(title__icontains=t) | Q(description__icontains=t))
+
+            if query == None:
+                query = q
+            else:
+                query = query | q
+
+        jsonquery = json.loads(serialize('json', query))
+
+        print(searchTerms, file=sys.stderr)
+        return Response(jsonquery, status=status.HTTP_200_OK)
