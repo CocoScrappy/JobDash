@@ -21,7 +21,7 @@ class JobPostView(viewsets.ModelViewSet):
     def get_user_job_postings(self, request):
         try:
             user = request.user
-            print(user.id)
+
             userPosts = JobPost.objects.filter(
                 employer=user.id).select_related("employer")
 
@@ -34,7 +34,7 @@ class JobPostView(viewsets.ModelViewSet):
                 for post in userPosts:
                     posting = self.get_serializer(post).data
                     data.append(posting)
-                print(data)
+                # print(data)
                 return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
