@@ -49,7 +49,7 @@ class CvsView(viewsets.ModelViewSet):
         # else:
         #     print("no token is provided in the header or the header is missing")
         try:
-            user = request.user;
+            user = request.user
             cvs = CvBasic.objects.get(user=user.id)
             cvs_serializer = serializers.DefaultCvSerializer(cvs)
             return Response(cvs_serializer.data, status=status.HTTP_200_OK)
