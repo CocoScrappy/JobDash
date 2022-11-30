@@ -43,13 +43,13 @@ class ApplicationView(viewsets.ModelViewSet):
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
     @action(detail=True, methods=['get'])
     def details(self, request, pk=None):
         application = self.get_object()
         application_data = self.get_serializer(application).data
         application_data["job_posting"] = jobpost_serializers.JobPostSerializer(
             application.job_posting).data
+        return Response(application_data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'], url_path="get_jobposting_application")
     def get_jobposting_application(self, request):
@@ -82,7 +82,5 @@ class ApplicationView(viewsets.ModelViewSet):
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
         return Response(application_data, status=status.HTTP_200_OK)
