@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 # from azure.keyvault.secrets import SecretClient
 # import os
 
+from corsheaders.defaults import default_headers
 from datetime import timedelta
 import os
 import django_heroku
@@ -26,7 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!w8e(9y1gn)s7=1y@vxr0sgyu$v8x2_1#$)nc@g#$l(1%b8z%*'#os.environ.get('SECRET_KEY')
+# os.environ.get('SECRET_KEY')
+SECRET_KEY = 'django-insecure-!w8e(9y1gn)s7=1y@vxr0sgyu$v8x2_1#$)nc@g#$l(1%b8z%*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -162,26 +164,26 @@ CORS_ORIGIN_WHITELIST = (
     'https://cocoscrappy.github.io'
 )
 
-CORS_ALLOWED_ORIGINS  = (
+CORS_ALLOWED_ORIGINS = (
     'http://localhost:3000',
     'https://cocoscrappy.github.io'
 )
 
-from corsheaders.defaults import default_headers
-CORS_ALLOW_HEADERS = list(default_headers) + ['email']
-#CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = list(default_headers) + ['email'] + ['posting']
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication'
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300)
 }
 
-AUTH_USER_MODEL='user.UserAccount'
+AUTH_USER_MODEL = 'user.UserAccount'
 
 django_heroku.settings(locals())

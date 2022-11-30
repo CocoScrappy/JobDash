@@ -1,9 +1,14 @@
+import sys
 from django.shortcuts import render
-from rest_framework import viewsets, status, permissions
+from rest_framework import viewsets, status
 from . import serializers
 from rest_framework.decorators import action
 from .models import JobPost
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.core.serializers import serialize
+import json
+from django.db.models import Q
 
 # Create your views here.
 
@@ -17,11 +22,32 @@ class JobPostView(viewsets.ModelViewSet):
     serializer_class = serializers.JobPostSerializer
     queryset = JobPost.objects.all()
 
+class JobSearchView(APIView):
+    serializer_class = serializers.JobPostSerializer
+
+
+    def get(self,request,par):
+        
+        searchTerms=par.split()
+        query=None
+        for t in searchTerms:
+            q=JobPost.objects.filter(Q(title__icontains=t)|Q(description__icontains=t))
+            
+            if query==None:
+                query=q
+            else:
+                query=query|q
+        
+        jsonquery=json.loads(serialize('json',query))
+        
+
+        print(searchTerms, file=sys.stderr)
+        return Response(jsonquery,status=status.HTTP_200_OK)
     @action(detail=False, methods=['get'], url_path="get_user_postings")
     def get_user_job_postings(self, request):
         try:
             user = request.user
-            print(user.id)
+
             userPosts = JobPost.objects.filter(
                 employer=user.id).select_related("employer")
 
@@ -34,7 +60,7 @@ class JobPostView(viewsets.ModelViewSet):
                 for post in userPosts:
                     posting = self.get_serializer(post).data
                     data.append(posting)
-                print(data)
+                # print(data)
                 return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
