@@ -28,9 +28,10 @@ class UserAccountManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             summary=summary,
-            password=password,
             role=role
         )
+        user.set_password(password)
+        user.summary=""
         user.is_staff = True
         user.is_superuser=True
         user.save(using=self._db)
