@@ -22,9 +22,12 @@ class JobPostView(viewsets.ModelViewSet):
         try:
             user = request.user
 
-            userPosts = JobPost.objects.filter(
-                employer=user.id).select_related("employer")
+            if (user.role == 'employer'):
 
+                userPosts = JobPost.objects.filter(
+                    employer=user.id).select_related("employer")
+            else:
+                userPosts = JobPost.objects.all()
             if not userPosts:
                 return Response({"message": "No job postings found for current user",
                                  "data": []},
