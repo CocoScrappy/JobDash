@@ -1,3 +1,123 @@
+November 30, 2022 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- FINISHED REACT course! Feeling more confident :D 
+
+- Pulled the latest, installled and ran the app, created a new branch and started to work!  
+
+- Getting started is 50% of the job!  
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  Finish styling Login/Register 
+
+-  Import fonts 
+
+-  Base styling 
+
+-  Define CSS custom properties in :root (define main colors, etc) 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Needed some time to get my bearings but I feel confident now to attack the project after doing the react tutorial and having the layouts and components already laid out in Figma 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+User story: a user can view an application detail 
+
+User can favorite/unfavorite an application 
+
+ User can update notes of application 
+
+User can preview notes in application 
+
+User can preview job description of an application 
+
+Not done 
+
+Pagination of job applications 
+
+tbd 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+User story: a user can view an application detail 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- Employer side of application’s list 
+
+	+ Fetch applicant info from database 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+	- finish employer application 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+	- maybe some linking with other application functionalities (probably not) 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+- learn how to create multiple stores on Zustand to pass jobposting info to application form page 
+
+- add more fileds to application form page 
+
+- finished application submit with team help 
+
+- Notify user on application submit – not reached yet but can do today 
+
+- Hide secrets – not reached yet 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- add Application Submitted notification 
+
+- external application 
+
+- adding "favorited" icon to Job posting list OR job application list 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Nothing at this point 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Implemented a working search function on the front end for jobs 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Implement search for applications, clean up login code, modify job search 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+nothing 
+
+ 
+
 November 29, 2022 
 
  
