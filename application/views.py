@@ -4,7 +4,7 @@ from . import serializers
 from .models import Application
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from job_posting.serializers import JobPostSerializer
+from job_posting.serializers import JobPostSerializerForApplicationListing
 
 # Create your views here.
 
@@ -18,7 +18,6 @@ class ApplicationView(viewsets.ModelViewSet):
     def get_user_applications(self, request):
         try:
             user = request.user
-            print(user)
             applications = Application.objects.filter(
                 applicant=user.id).select_related("job_posting")
             if not applications:
@@ -28,12 +27,11 @@ class ApplicationView(viewsets.ModelViewSet):
             else:
                 data = []
                 for application in applications:
-                    application_data = self.get_serializer(
+                    application_data = serializers.ApplicationSerializerForJobListings(
                         application).data
-                    application_data["job_posting"] = JobPostSerializer(
+                    application_data["job_posting"] = JobPostSerializerForApplicationListing(
                         application.job_posting).data
                     data.append(application_data)
-                print(data)
                 return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
