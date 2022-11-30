@@ -4,13 +4,13 @@ from . import serializers
 from .models import Application
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from job_posting.serializers import JobPostSerializerForApplicationListing
+from job_posting import serializers as jobpost_serializers
 
 # Create your views here.
 
 
 class ApplicationView(viewsets.ModelViewSet):
-    # permission_classes=[permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.ApplicationSerializer
     queryset = Application.objects.all()
 
@@ -29,7 +29,7 @@ class ApplicationView(viewsets.ModelViewSet):
                 for application in applications:
                     application_data = serializers.ApplicationSerializerForJobListings(
                         application).data
-                    application_data["job_posting"] = JobPostSerializerForApplicationListing(
+                    application_data["job_posting"] = jobpost_serializers.JobPostSerializerForApplicationListing(
                         application.job_posting).data
                     data.append(application_data)
                 return Response(data, status=status.HTTP_200_OK)
@@ -38,7 +38,11 @@ class ApplicationView(viewsets.ModelViewSet):
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @action(detail=True, methods=['get'])
+    def details(self, request, pk=None):
+        application = self.get_object()
+        application_data = self.get_serializer(application).data
+        application_data["job_posting"] = jobpost_serializers.JobPostSerializer(
+            application.job_posting).data
 
-# class DefaultApplicationView(viewsets.ModelViewSet):
-#     serializer_class = serializers.DefaultApplicationSerializer
-#     queryset = Application.objects.all()
+        return Response(application_data, status=status.HTTP_200_OK)

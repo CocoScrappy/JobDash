@@ -12,4 +12,4 @@ class ApplicationSerializer(serializers.ModelSerializer):
 class ApplicationSerializerForJobListings(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ('application_date', 'favorited', 'status')
+        fields = ('id','application_date', 'favorited', 'status')

@@ -19,4 +19,4 @@ class JobPostSerializer(serializers.ModelSerializer):
 class JobPostSerializerForApplicationListing(serializers.ModelSerializer):
     class Meta:
         model = JobPost
-        fields = 'title', 'company', 'location', 'remote_option'
+        fields = 'id', 'title', 'company', 'location', 'remote_option'
