@@ -54,12 +54,16 @@ class JobSearchView(APIView):
     serializer_class = serializers.JobPostSerializer
 
     def get(self, request, par):
-
+        print(request.user, file=sys.stderr)
+        user=request.user
         searchTerms = par.split()
         query = None
         for t in searchTerms:
             q = JobPost.objects.filter(
                 Q(title__icontains=t) | Q(description__icontains=t))
+
+            if user.role=='employer':
+                q=q.filter(employer=user.id)
 
             if query == None:
                 query = q
