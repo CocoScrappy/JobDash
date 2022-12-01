@@ -64,23 +64,32 @@ class ApplicationView(viewsets.ModelViewSet):
                                 status=status.HTTP_404_NOT_FOUND)
             else:
                 data = []
-                users = []
-                cvs = []
+                # users = []
+                # cvs = []
+                user = {}
+                cv = {}
+                applicant = [user, cv]
                 for application in applications:
                     cv = CvBasic.objects.get(
+                        id=application.cv.id)  # should be application.applicant.id for single cv
+                    user = UserAccount.objects.get(  # but the records in the database make that impossible
                         id=application.applicant.id)
+                    if (user == None or cv == None):
+                        continue
                     cv = CvSerializer(cv).data
-                    cvs.append(cv)
-                    user = UserAccount.objects.get(
-                        id=application.applicant.id)
+                    # cvs.append(cv)
+
                     user = UserSerializer(user).data
-                    users.append(user)
-                data.append(users)
-                data.append(cvs)
+                    # users.append(user)
+                    applicant[0] = cv
+                    applicant[1] = user
+                    data.append(applicant)
+                # data.append(users)
+                # data.append(cvs)
                 return Response(data, status=status.HTTP_200_OK, headers={"Access-Control-Allow-Origin": "*"})
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response(application_data, status=status.HTTP_200_OK)
+        # return Response(application_data, status=status.HTTP_200_OK)
