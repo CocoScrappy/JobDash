@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from django.core.serializers import serialize
 import json
 from django.db.models import Q
+from rest_framework.pagination import LimitOffsetPagination
 
 # Create your views here.
 
@@ -20,6 +21,7 @@ class DefaultJobPostView(viewsets.ModelViewSet):
 
 class JobPostView(viewsets.ModelViewSet):
     serializer_class = serializers.JobPostSerializer
+    pagination_class=LimitOffsetPagination
     queryset = JobPost.objects.all()
 
     @action(detail=False, methods=['get'], url_path="get_user_postings")
@@ -39,20 +41,25 @@ class JobPostView(viewsets.ModelViewSet):
                                 status=status.HTTP_404_NOT_FOUND)
             else:
                 data = []
+                #pagination must happen before serialization
+                userPosts=self.paginate_queryset(userPosts)
                 for post in userPosts:
+                    
                     posting = self.get_serializer(post).data
                     data.append(posting)
                 print(data)
-                return Response(data, status=status.HTTP_200_OK)
+                return self.get_paginated_response(data)
+                #return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JobSearchView(APIView):
+class JobSearchView(APIView, LimitOffsetPagination):
     serializer_class = serializers.JobPostSerializer
-
+    
+    
     def get(self, request, par):
         print(request.user, file=sys.stderr)
         user=request.user
@@ -70,7 +77,9 @@ class JobSearchView(APIView):
             else:
                 query = query | q
 
+        query=self.paginate_queryset(query,request,view=self)
         jsonquery = json.loads(serialize('json', query))
 
         print(searchTerms, file=sys.stderr)
-        return Response(jsonquery, status=status.HTTP_200_OK)
+        return LimitOffsetPagination.get_paginated_response(self,jsonquery)
+        #return Response(jsonquery, status=status.HTTP_200_OK)
