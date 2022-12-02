@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, permissions
-
+import sys
 from user.models import UserAccount
 from user.serializers import UserSerializer
 from . import serializers
@@ -10,7 +10,10 @@ from cv_basic.serializers import CvSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from job_posting import serializers as jobpost_serializers
-
+from rest_framework.views import APIView
+from django.core.serializers import serialize
+import json
+from django.db.models import Q
 # Create your views here.
 
 
@@ -92,4 +95,26 @@ class ApplicationView(viewsets.ModelViewSet):
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # return Response(application_data, status=status.HTTP_200_OK)
+        return Response(application_data, status=status.HTTP_200_OK)
+
+
+class ApplicationSearchView(APIView):
+
+    def get(self, request, par):
+        print(request.user, file=sys.stderr)
+        user = request.user
+        searchTerms = par.split()
+        query = None
+        for t in searchTerms:
+            q = Application.objects.filter(
+                Q(title__icontains=t) | Q(description__icontains=t)).filter(applicant=user.id)
+
+            if query == None:
+                query = q
+            else:
+                query = query | q
+
+        jsonquery = json.loads(serialize('json', query))
+
+        print(searchTerms, file=sys.stderr)
+        return Response(jsonquery, status=status.HTTP_200_OK)
