@@ -1,3 +1,91 @@
+December 1st, 2022 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- Imported fonts 
+
+- Worked on Navbar 
+
+- Some base styling  
+
+- Spent a lot of time on Login/Register but wasted time consolidating Formik and React-Bootstrap – trying to resolve this issue 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- Finish Login/Registe r- if only style and look at functionality with someone else 
+
+- Move on to job search page 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+-Consolidating what was done with Formik with React-Bootstrap 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- reduced jobposting get list to 1 call with role checked backend 
+
+- get request in employer job posting receive data from applications 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  rich text editor in job posting 
+
+- validation msg in job posting 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Leaving employer side application logic implementation for after I have an idea of the style 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Modified the search function in jobs to only include an employer’s posting in the results, fixed some login-register issues 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Keep working on the implementation of search for applications, create tests for login, help Alina with login, discovery work on scraping 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+nothing 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+- added"favorited" icon to Job posting list OR job application list 
+
+- add Application Submitted notification – not reached yet 
+
+- external application – not reached yet 
+
+- Hide secrets – not reached yet 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- add Application Submitted notification 
+
+- external application 
+
+- Hide secrets – not reached yet 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Nothing at this point 
+
 November 30, 2022 
 
  
