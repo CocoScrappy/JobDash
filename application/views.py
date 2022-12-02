@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from django.core.serializers import serialize
 import json
 from django.db.models import Q
+from rest_framework.pagination import LimitOffsetPagination
 # Create your views here.
 
 
@@ -21,6 +22,7 @@ class ApplicationView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.ApplicationSerializer
     queryset = Application.objects.all()
+    pagination_class=LimitOffsetPagination
 
     @action(detail=False, methods=['get'], url_path="get_user_applications")
     def get_user_applications(self, request):
@@ -34,13 +36,16 @@ class ApplicationView(viewsets.ModelViewSet):
                                 status=status.HTTP_404_NOT_FOUND)
             else:
                 data = []
+                applications=self.paginate_queryset(applications)
                 for application in applications:
+                    
                     application_data = serializers.ApplicationSerializerForJobListings(
                         application).data
                     application_data["job_posting"] = jobpost_serializers.JobPostSerializerForApplicationListing(
                         application.job_posting).data
                     data.append(application_data)
-                return Response(data, status=status.HTTP_200_OK)
+                return self.get_paginated_response(data)
+                #return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
