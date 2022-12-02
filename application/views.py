@@ -65,7 +65,7 @@ class ApplicationView(viewsets.ModelViewSet):
             else:
                 data = []
                 # users = []
-                # cvs = []
+                # cvs = [] // data: [ applicant: [{user}, {cv}]]
                 user = {}
                 cv = {}
                 applicant = [user, cv]
