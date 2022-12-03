@@ -1,6 +1,78 @@
-December 1st, 2022 
+December 2nd, 2022 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+- busy day was not able to work much of anything 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- add Application Submitted notification 
+
+- external application 
+
+- Hide secrets – not reached yet 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Nothing at this point 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+Interview test preparation 
+
+Not done 
+
+Pagination of job applications 
+
+a user can search in applications 
+
+Implement calendar and dates in applications 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+User story: a user can view an application detail 
+
+3. Where do I need assistance? What do I need to figure out? 
 
  
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- model validation messages in job posting form 
+
+2. What I plan to do from this scrum to next? (next 72 hours) 
+
+-  pagination in job posting 
+
+- redoing the employer call to get cv and user for each applications  (with custom serializer?) 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Rami’s Pagination’s genius (how do you deal with multiple << ’s >> in English? 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Fixed some pagination issues, created a seperate web scraper app 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Integrate the web scraper app into our project 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Do web scrapers work serverside? 
+
+December 1st, 2022 
 
 Alina 
 
