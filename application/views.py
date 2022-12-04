@@ -6,7 +6,7 @@ from user.serializers import UserSerializer
 from . import serializers
 from .models import Application
 from cv_basic.models import CvBasic
-from cv_basic.serializers import CvSerializer
+from cv_basic.serializers import DefaultCvSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from job_posting import serializers as jobpost_serializers
@@ -104,34 +104,39 @@ class ApplicationView(viewsets.ModelViewSet):
             applications = Application.objects.filter(
                 job_posting=jobpostingId).select_related("job_posting")
             if not applications:
-                return Response({"message": "No applications found for current user",
+                return Response({"message": "No applications found for this job posting",
                                  "data": []},
                                 status=status.HTTP_404_NOT_FOUND)
             else:
                 data = []
-                # users = []
-                # cvs = [] // data: [ applicant: [{user}, {cv}]]
                 user = {}
                 cv = {}
-                applicant = [user, cv]
+                # applicant = [user, cv]
+                applications = self.paginate_queryset(applications)
                 for application in applications:
-                    cv = CvBasic.objects.get(
-                        id=application.cv.id)  # should be application.applicant.id for single cv
-                    user = UserAccount.objects.get(  # but the records in the database make that impossible
-                        id=application.applicant.id)
-                    if (user == None or cv == None):
-                        continue
-                    cv = CvSerializer(cv).data
-                    # cvs.append(cv)
+                    application_data = serializers.ApplicationSerializerForEmployer(
+                        application).data
+                    application_data["cv"] = DefaultCvSerializer(
+                        application.cv).data
+                    application_data["applicant"] = UserSerializer(
+                        application.applicant).data
+                    data.append(application_data)
+                return self.get_paginated_response(data)
+                # WITHOUT serializer
+                # cv = CvBasic.objects.get(
+                #     id=application.cv.id)  # should be application.applicant.id for single cv
+                # user = UserAccount.objects.get(  # but the records in the database make that impossible
+                #     id=application.applicant.id)
+                # if (user == None or cv == None):
+                #     continue
+                # cv = CvSerializer(cv).data
+                # user = UserSerializer(user).data
 
-                    user = UserSerializer(user).data
-                    # users.append(user)
-                    applicant[0] = cv
-                    applicant[1] = user
-                    data.append(applicant)
-                # data.append(users)
-                # data.append(cvs)
-                return Response(data, status=status.HTTP_200_OK, headers={"Access-Control-Allow-Origin": "*"})
+                # applicant[0] = cv
+                # applicant[1] = user
+                # data.append(applicant)
+
+                # return Response(data, status=status.HTTP_200_OK, headers={"Access-Control-Allow-Origin": "*"})
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},

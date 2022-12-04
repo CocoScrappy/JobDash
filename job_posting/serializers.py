@@ -16,6 +16,7 @@ class JobPostSerializer(serializers.ModelSerializer):
         model = JobPost
         fields = '__all__'
 
+
 class JobPostSerializerForApplicationListing(serializers.ModelSerializer):
     class Meta:
         model = JobPost
