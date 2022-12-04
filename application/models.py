@@ -37,7 +37,7 @@ class Application(models.Model):
 
 class Saved_Date(models.Model):
     application = models.ForeignKey(
-        Application, related_name='dates', on_delete=models.CASCADE)
+        Application, related_name='saved_dates', on_delete=models.CASCADE)
 
     name = models.CharField(max_length=120)
     notes = models.TextField(blank=True, max_length=2500)

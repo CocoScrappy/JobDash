@@ -57,9 +57,11 @@ class ApplicationView(viewsets.ModelViewSet):
         application_data = self.get_serializer(application).data
         application_data["job_posting"] = jobpost_serializers.JobPostSerializer(
             application.job_posting).data
-        # saved_dates = Date.objects.filter(application=application)
+        # saved_dates = Saved_Date.objects.filter(
+        #     application=application).values()
+        # print(saved_dates, file=sys.stderr)
         application_data["saved_dates"] = serializers.SavedDatesSerializer(
-            application.saved_dates)
+            application.saved_dates, many=True).data
         return Response(application_data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
