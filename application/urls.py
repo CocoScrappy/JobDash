@@ -7,6 +7,9 @@ application_router = routers.DefaultRouter()
 application_router.register(
     r'applications', views.ApplicationView, 'application')
 
+application_router.register(
+    r'dates', views.SavedDatesView, 'date')
+
 # urlpatterns = [
 #     path('applications/search/', views.ApplicationSearchView.as_view())
 # ]
