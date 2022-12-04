@@ -66,6 +66,36 @@ class ApplicationView(viewsets.ModelViewSet):
             {"value": option[0], "label": option[1]} for option in status_options]
         return Response(status_options_2, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=['post'], url_path="search")
+    def search_applications(self, request):
+        print(request.data, file=sys.stderr)
+        searchString = request.data['searchString']
+        user = request.user
+        searchTerms = searchString.split()
+        applications = None
+        for term in searchTerms:
+            term_queryset = Application.objects.filter(
+                Q(job_posting__title__icontains=term) | Q(job_posting__description__icontains=term)).filter(applicant=user.id)
+
+            if applications == None:
+                applications = term_queryset
+            else:
+                applications = applications | term_queryset
+
+        if not applications:
+            return Response({"message": "No applications found with the search term",
+                             "data": []},
+                            status=status.HTTP_404_NOT_FOUND)
+        else:
+            data = []
+            for application in applications:
+                application_data = serializers.ApplicationSerializerForJobListings(
+                    application).data
+                application_data["job_posting"] = jobpost_serializers.JobPostSerializerForApplicationListing(
+                    application.job_posting).data
+                data.append(application_data)
+            return Response(data, status=status.HTTP_200_OK)
+
     @action(detail=False, methods=['get'], url_path="get_jobposting_application")
     def get_jobposting_application(self, request):
         try:
@@ -107,26 +137,25 @@ class ApplicationView(viewsets.ModelViewSet):
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response(application_data, status=status.HTTP_200_OK)
 
+# class ApplicationSearchView(APIView):
 
-class ApplicationSearchView(APIView):
+#     def get(self, request):
+#         print(request.user, file=sys.stderr)
+#         searchString = request.body.searchString
+#         user = request.user
+#         searchTerms = searchString.split()
+#         query = None
+#         for t in searchTerms:
+#             q = Application.objects.filter(
+#                 Q(title__icontains=t) | Q(description__icontains=t)).filter(applicant=user.id)
 
-    def get(self, request, par):
-        print(request.user, file=sys.stderr)
-        user = request.user
-        searchTerms = par.split()
-        query = None
-        for t in searchTerms:
-            q = Application.objects.filter(
-                Q(title__icontains=t) | Q(description__icontains=t)).filter(applicant=user.id)
+#             if query == None:
+#                 query = q
+#             else:
+#                 query = query | q
 
-            if query == None:
-                query = q
-            else:
-                query = query | q
+#         jsonquery = json.loads(serialize('json', query))
 
-        jsonquery = json.loads(serialize('json', query))
-
-        print(searchTerms, file=sys.stderr)
-        return Response(jsonquery, status=status.HTTP_200_OK)
+#         print(searchTerms, file=sys.stderr)
+#         return Response(jsonquery, status=status.HTTP_200_OK)
