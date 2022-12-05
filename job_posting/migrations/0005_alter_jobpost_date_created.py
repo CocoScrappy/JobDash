@@ -13,7 +13,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name='jobpost',
+            name='company',
+            field=models.CharField(blank=True, default='', max_length=60),
+        ),
+        migrations.AlterField(
+            model_name='jobpost',
             name='date_created',
-            field=models.DateTimeField(default=datetime.datetime(2022, 11, 28, 11, 55, 59, 571371)),
+            field=models.DateTimeField(default=datetime.datetime(2022, 11, 27, 17, 44, 1, 860430)),
         ),
     ]
