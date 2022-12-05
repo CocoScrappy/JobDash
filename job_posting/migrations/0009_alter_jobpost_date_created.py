@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('job_posting', '0008_merge_20221204_1258'),
+        ('job_posting', '0008_jobpost_link_alter_jobpost_company_and_more'),
     ]
 
     operations = [
