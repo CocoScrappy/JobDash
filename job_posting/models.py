@@ -1,5 +1,6 @@
+import re
 from django.db import models
-from datetime import datetime
+from datetime import datetime, timedelta
 from django_config import settings
 
 # Create your models here.
@@ -21,8 +22,18 @@ class JobPost(models.Model):
     description = models.TextField(blank=False)
     company = models.CharField(max_length=60, default='', blank=True)
     date_created = models.DateTimeField(default=datetime.now())
+    link=models.URLField(null=True)
 
     remote_option = models.CharField(
         max_length=30,
         choices=REMOTE_OPTIONS,
     )
+
+    def calculatePostDate(daysAgoStr):
+        if daysAgoStr.lower() != "today":
+            daysAgoInt=int(re.sub(r'[^0-9]','',daysAgoStr.split()[0]))
+            datePosted = datetime.today() - timedelta(days=daysAgoInt)
+        else:
+            datePosted=datetime.today()
+            
+        return datePosted.isoformat()

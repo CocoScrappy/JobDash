@@ -21,3 +21,8 @@ class JobPostSerializerForApplicationListing(serializers.ModelSerializer):
     class Meta:
         model = JobPost
         fields = 'id', 'title', 'company', 'location', 'remote_option'
+
+class JobPostSerializerForScraping(serializers.ModelSerializer):
+    class Meta:
+        model = JobPost
+        fields = 'id', 'title', 'logo_url', 'location','description', 'company','date_created','link', 'remote_option'

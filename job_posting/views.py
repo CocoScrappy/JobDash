@@ -81,9 +81,15 @@ class JobSearchView(APIView, LimitOffsetPagination):
             else:
                 query = query | q
 
+        
         query=self.paginate_queryset(query,request,view=self)
-        jsonquery = json.loads(serialize('json', query))
+
+        responseQuery=[]
+        for q in query:
+            responseQuery.append(serializers.DefaultJobPostSerializer(q).data)
+
+        #jsonquery = json.loads(DefaultJobPostSerializer(query).data)
 
         print(searchTerms, file=sys.stderr)
-        return LimitOffsetPagination.get_paginated_response(self,jsonquery)
+        return LimitOffsetPagination.get_paginated_response(self,responseQuery)
         #return Response(jsonquery, status=status.HTTP_200_OK)

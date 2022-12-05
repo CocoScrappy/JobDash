@@ -3,10 +3,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 from . import scrapeModel
+from user.models import UserAccount
+from job_posting.models import JobPost
+from job_posting.serializers import DefaultJobPostSerializer
 import json
 from django.core.serializers import serialize
 
 def scraper(searchQuery,searchLocation,self):
+
+    externalAccount=UserAccount.objects.get(pk=14)
+
     path=r'.\\chromedriver'
     #https://stackoverflow.com/questions/37883759/errorssl-client-socket-openssl-cc1158-handshake-failed-with-chromedriver-chr
     options=webdriver.ChromeOptions()
@@ -49,6 +55,7 @@ def scraper(searchQuery,searchLocation,self):
         
         #finds POSTED DATE
         postDate=driver.find_element(By.XPATH,'//div[@data-test-id="svx-jobview-posted"]').text
+        postDate=JobPost.calculatePostDate(postDate)
 
         #finds COMPANY NAME
         companyName=driver.find_element(By.XPATH,"//h2[@class='headerstyle__JobViewHeaderCompany-sc-1ijq9nh-6 dyxqrf']").text
@@ -70,11 +77,12 @@ def scraper(searchQuery,searchLocation,self):
         #finds LINK TO APPLICATION
         jobLink=driver.find_element(By.XPATH,'//a[@data-testid="svx_jobCard-title"]').get_attribute("href")
 
-        scraps.append(scrapeModel.ScrapeModel(companyName,jobTitle,location,descElementCleaned,postDate,jobLink))
-
+        #scraps.append(scrapeModel.ScrapeModel(companyName,jobTitle,location,descElementCleaned,postDate,jobLink))
+        job=JobPost.objects.create(employer=externalAccount,title=jobTitle,location=location,description=descElementCleaned,company=companyName,date_created=postDate,link=jobLink)
+        scraps.append(DefaultJobPostSerializer(job).data)
         currCard+=1.0
-        percentage=str(100*currCard/numOfResults)+"% Done"
-        self.send(text_data=json.dumps({"message":percentage}))
+        percentage=f'{100*currCard/numOfResults:.2f}'
+        self.send(text_data=json.dumps({"percent":percentage}))
 
         #makes sure card is focused, otherwise can't click
         driver.execute_script("arguments[0].scrollIntoView();",jc)
@@ -87,7 +95,7 @@ def scraper(searchQuery,searchLocation,self):
     def obj_dict(obj):
             return obj.__dict__
 
-    self.send(text_data=json.dumps({"message":json.dumps(scraps,default=obj_dict)}))
+    self.send(text_data=json.dumps({"payload":json.dumps(scraps,default=obj_dict)}))
 
     for s in scraps:
         print(s.__str__(), file=sys.stderr)
