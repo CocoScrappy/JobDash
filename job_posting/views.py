@@ -60,14 +60,18 @@ class JobSearchView(APIView, LimitOffsetPagination):
     serializer_class = serializers.JobPostSerializer
     
     
-    def get(self, request, par):
+    def get(self, request, par, loc=None):
         print(request.user, file=sys.stderr)
         user=request.user
         searchTerms = par.split()
+        searchLocation=loc
         query = None
         for t in searchTerms:
             q = JobPost.objects.filter(
                 Q(title__icontains=t) | Q(description__icontains=t))
+            
+            if searchLocation != None:
+                q=q.filter(Q(remote_option__icontains=loc)|Q(location__icontains=loc))
 
             if user.role=='employer':
                 q=q.filter(employer=user.id)
@@ -77,9 +81,15 @@ class JobSearchView(APIView, LimitOffsetPagination):
             else:
                 query = query | q
 
+        
         query=self.paginate_queryset(query,request,view=self)
-        jsonquery = json.loads(serialize('json', query))
+
+        responseQuery=[]
+        for q in query:
+            responseQuery.append(serializers.DefaultJobPostSerializer(q).data)
+
+        #jsonquery = json.loads(DefaultJobPostSerializer(query).data)
 
         print(searchTerms, file=sys.stderr)
-        return LimitOffsetPagination.get_paginated_response(self,jsonquery)
+        return LimitOffsetPagination.get_paginated_response(self,responseQuery)
         #return Response(jsonquery, status=status.HTTP_200_OK)
