@@ -10,6 +10,7 @@ class SavedDatesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
 class ApplicationSerializer(serializers.ModelSerializer):
     saved_dates = SavedDatesSerializer(many=True)
 
@@ -24,9 +25,16 @@ class ApplicationSerializerForJobListings(serializers.ModelSerializer):
         fields = ('id', 'application_date', 'favorited', 'status')
 
 
+
 class ApplicationWithDatesSerializer(serializers.ModelSerializer):
     saved_dates = SavedDatesSerializer(many=True)
 
     class Meta:
         model = Saved_Date
         fields = '__all__'
+
+class ApplicationSerializerForEmployer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = 'id', 'cv', 'applicant'
+
