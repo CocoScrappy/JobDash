@@ -5,6 +5,8 @@ from job_posting.models import JobPost
 from django_config import settings
 
 # Create your models here.
+
+
 class Application(models.Model):
     STATUSES = [
         ('applied', 'Applied'),
@@ -14,18 +16,29 @@ class Application(models.Model):
         ('offer', 'Offer'),
         ('accepted', 'Accepted'),
     ]
-     
-    job_posting = models.ForeignKey(JobPost, related_name='applications', on_delete=models.DO_NOTHING)
-    cv = models.ForeignKey(cv_models.CvBasic, related_name='applications', on_delete=models.DO_NOTHING)
-    applicant = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.DO_NOTHING)
-    
+
+    job_posting = models.ForeignKey(
+        JobPost, related_name='applications', on_delete=models.DO_NOTHING)
+    cv = models.ForeignKey(
+        cv_models.CvBasic, related_name='applications', on_delete=models.DO_NOTHING)
+    applicant = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+
     application_date = models.DateTimeField(default=datetime.now())
     notes = models.TextField(blank=True, max_length=2500)
     favorited = models.BooleanField(default=False)
-    
+
     status = models.CharField(
         max_length=30,
         choices=STATUSES,
         default='applied',
     )
-    
+
+
+class Saved_Date(models.Model):
+    application = models.ForeignKey(
+        Application, related_name='saved_dates', on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=120)
+    notes = models.TextField(blank=True, max_length=2500)
+    datetime = models.DateTimeField()

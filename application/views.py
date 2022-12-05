@@ -4,7 +4,7 @@ import sys
 from user.models import UserAccount
 from user.serializers import UserSerializer
 from . import serializers
-from .models import Application
+from .models import Application, Saved_Date
 from cv_basic.models import CvBasic
 from cv_basic.serializers import DefaultCvSerializer
 from rest_framework.decorators import action
@@ -19,7 +19,7 @@ from rest_framework.pagination import LimitOffsetPagination
 
 
 class ApplicationView(viewsets.ModelViewSet):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.ApplicationSerializer
     queryset = Application.objects.all()
     pagination_class = LimitOffsetPagination
@@ -57,6 +57,11 @@ class ApplicationView(viewsets.ModelViewSet):
         application_data = self.get_serializer(application).data
         application_data["job_posting"] = jobpost_serializers.JobPostSerializer(
             application.job_posting).data
+        # saved_dates = Saved_Date.objects.filter(
+        #     application=application).values()
+        # print(saved_dates, file=sys.stderr)
+        application_data["saved_dates"] = serializers.SavedDatesSerializer(
+            application.saved_dates, many=True).data
         return Response(application_data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
@@ -143,24 +148,8 @@ class ApplicationView(viewsets.ModelViewSet):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# class ApplicationSearchView(APIView):
-
-#     def get(self, request):
-#         print(request.user, file=sys.stderr)
-#         searchString = request.body.searchString
-#         user = request.user
-#         searchTerms = searchString.split()
-#         query = None
-#         for t in searchTerms:
-#             q = Application.objects.filter(
-#                 Q(title__icontains=t) | Q(description__icontains=t)).filter(applicant=user.id)
-
-#             if query == None:
-#                 query = q
-#             else:
-#                 query = query | q
-
-#         jsonquery = json.loads(serialize('json', query))
-
-#         print(searchTerms, file=sys.stderr)
-#         return Response(jsonquery, status=status.HTTP_200_OK)
+class SavedDatesView(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.SavedDatesSerializer
+    queryset = Saved_Date.objects.all()
+    paginator = None
