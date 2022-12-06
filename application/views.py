@@ -125,8 +125,13 @@ class ApplicationView(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path="get_jobposting_application")
     def get_jobposting_application(self, request):
         try:
+
             jobpostingId = request.headers['posting']
-            print(jobpostingId)
+            jobposting = JobPost.objects.get(pk=jobpostingId)
+            user = request.user
+
+            if jobposting.employer != user:
+                return Response({"message": "You are unauthorized to view these applications"}, status=status.HTTP_401_UNAUTHORIZED)
             applications = Application.objects.filter(
                 job_posting=jobpostingId).select_related("job_posting")
             if not applications:
