@@ -68,7 +68,8 @@ class ApplicationTestCase(TestCase):
 
     def test_applicant_already_applied_should_raise_exception(self):
         '''
-        A user cannot apply to the same application twice
+        A user cannot apply to the same application twice.
+        This test should return an exception
         '''
         with self.assertRaises(Exception):
             Application.objects.create(

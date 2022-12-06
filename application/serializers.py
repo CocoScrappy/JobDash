@@ -36,3 +36,9 @@ class ApplicationSerializerForEmployer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = 'id', 'cv', 'applicant'
+
+
+class DefaultApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = '__all__'
