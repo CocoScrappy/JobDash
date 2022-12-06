@@ -6,11 +6,11 @@ from job_posting.models import JobPost
 from user.models import UserAccount
 from application.models import Application, Saved_Date
 from cv_basic.models import CvBasic
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 import json
 
 
-class ApplicationDetailsTest(APITestCase):
+class ApplicationViewsTest(APITestCase):
     def setUp(self):
         self.recruiter = UserAccount.objects.create(
             first_name='recruiter',
@@ -65,36 +65,52 @@ class ApplicationDetailsTest(APITestCase):
             applicant=self.applicant1,
         )
 
-        # self.application2 = Application.objects.create(
-        #     job_posting=self.jobpost,
-        #     cv=self.cv2,
-        #     applicant=self.applicant2,
-        # )
-
-        # self.saved_date1 = Saved_Date.objects.create(
-        #     application=self.application1,
-        #     name="first interview",
-        #     datetime='2023-01-08 15:00:00.000000'
-        # )
-
-        # self.saved_date2 = Saved_Date.objects.create(
-        #     application=self.application2,
-        #     name="first interview",
-        #     datetime='2023-01-08 15:00:00.000000'
-        # )
-
-    def test_user_can_get_their_applications(self):
+    def test_user_can_post_new_applications(self):
+        '''
+        User can post a new application through api url /api/applications/; 
+        Response status would be 201 and number of applications in the database should increase by 1
+        '''
         client = APIClient()
         client.force_authenticate(user=self.applicant2)
+        initial_applications_list = client.get(
+            '/api/applications/', format='json').data
+        initial_count = len(initial_applications_list)
         response = client.post('/api/applications/', {'job_posting': self.jobpost.id,
                                                       'cv': self.cv2.id,
                                                       'applicant': self.applicant2.id}, format='json')
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.data in Application.objects.filter(
-            applicant=self.applicant2))
+        new_applications_list = client.get(
+            '/api/applications/', format='json').data
+        new_count = len(new_applications_list)
+        self.assertTrue(new_count, initial_count)
 
-    def test_user_can_only_view_their_own_applications(self):
+    def test_user_can_view_their_own_applications(self):
+        '''
+        Applicant1 can view their own application1; 
+        Response status would be 200
+        '''
+        refresh = RefreshToken.for_user(self.applicant1)
+        token = {"HTTP_AUTHORIZATION": f'Bearer {refresh.access_token}'}
+        url = '/api/applications/{}/details/'.format(self.application1.id)
+        response = self.client.get(url, **token)
+        self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_cannot_view_other_users_applications(self):
+        '''
+        applicant2 cannot view application of applicant1 (application1); 
+        response status would be 401
+        '''
+        refresh = RefreshToken.for_user(self.applicant2)
+        token = {"HTTP_AUTHORIZATION": f'Bearer {refresh.access_token}'}
+        url = '/api/applications/{}/details/'.format(self.application1.id)
+        response = self.client.get(url, **token)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unauthenticated_user_cannot_view_applications(self):
+        '''
+        A user cannot view application details without being logged in
+        '''
         url = '/api/applications/{}/details/'.format(self.application1.id)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
