@@ -53,7 +53,10 @@ class ApplicationView(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def details(self, request, pk=None):
+        user = request.user
         application = self.get_object()
+        if application.applicant != user:
+            return Response({"message": "You are unauthorized to view this application"}, status=status.HTTP_401_UNAUTHORIZED)
         application_data = self.get_serializer(application).data
         application_data["job_posting"] = jobpost_serializers.JobPostSerializer(
             application.job_posting).data
