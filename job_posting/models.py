@@ -16,7 +16,7 @@ class JobPost(models.Model):
     employer = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
 
-    title = models.CharField(max_length=250)
+    title = models.CharField(max_length=250,help_text="This title cannot exceed 250 chars")
     logo_url = models.URLField(null=True)
     location = models.CharField(max_length=100)
     description = models.TextField(blank=False)
