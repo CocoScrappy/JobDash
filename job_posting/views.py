@@ -20,12 +20,24 @@ class DefaultJobPostView(viewsets.ModelViewSet):
 
 
 class JobPostView(viewsets.ModelViewSet):
+
     serializer_class = serializers.JobPostSerializer
     pagination_class = LimitOffsetPagination
     queryset = JobPost.objects.all()
 
     @action(detail=False, methods=['get'], url_path="get_user_postings")
-    def get_user_job_postings(self, request):
+    def get_user_postings(self, request):
+        """
+        For users : Gets all *internal* job postings.
+        For employers: Get all *internal* job posting for that user via the auth token Id.
+        Returns a paginated and serialized queryset with all the matches.
+
+        **Context**
+
+        ``def get_user_job_postings(self, request):``
+        uses request.user to get authenticated user id from token
+
+        """
         try:
             user = request.user
 
@@ -65,7 +77,7 @@ class JobSearchView(APIView, LimitOffsetPagination):
     ``def get(self, request, par, loc=None):``
         Takes in "par" as the search parameter, it can take several parameters. 
         Takes in "loc" as an optional parameter for the location. It will try to find matches with both :model:`job_posting.JobPost`'s remote_options and location.
-    
+
     ``q = JobPost.objects.filter(Q(title__icontains=t) | Q(description__icontains=t))``
         Queries that match EITHER in the title OR in the description will be added to the Query Set
 

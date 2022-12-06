@@ -124,6 +124,18 @@ class ApplicationView(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path="get_jobposting_application")
     def get_jobposting_application(self, request):
+        """
+        Returns a paginated and serialized queryset for each applications to a particular job posting.
+        For each application the query composes an object made of application id, cv model and user model.
+
+        The employer id in job posting is verified against the request user id from the token.
+
+        **Context**
+
+        ``jobpostingId = request.headers['posting']``
+        headers are used to transfer job posting id to the backend
+
+        """
         try:
 
             jobpostingId = request.headers['posting']
