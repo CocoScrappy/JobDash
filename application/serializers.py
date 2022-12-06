@@ -36,3 +36,10 @@ class ApplicationSerializerForEmployer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = 'id', 'cv', 'applicant'
+
+
+class ApplicationSerializerForDashboard(serializers.ModelSerializer):
+
+    class Meta:
+        model = Application
+        fields = ('id', 'favorited', 'status')

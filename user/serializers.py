@@ -63,3 +63,10 @@ class UserWithCVSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'first_name', 'last_name', 'email',
                   'summary', 'role', 'password',)
+
+
+class UserDashboardSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', "first_name", "last_name")
