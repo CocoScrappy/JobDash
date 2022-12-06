@@ -11,7 +11,7 @@ class SavedDatesSerializer(serializers.ModelSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    saved_dates = SavedDatesSerializer(many=True, allow_null=True)
+    saved_dates = SavedDatesSerializer(many=True, read_only=True)
 
     class Meta:
         model = Application
@@ -25,7 +25,7 @@ class ApplicationSerializerForJobListings(serializers.ModelSerializer):
 
 
 class ApplicationWithDatesSerializer(serializers.ModelSerializer):
-    saved_dates = SavedDatesSerializer(many=True)
+    saved_dates = SavedDatesSerializer(many=True, read_only=True)
 
     class Meta:
         model = Saved_Date
