@@ -1,22 +1,17 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, permissions
 import sys
-from user.models import UserAccount
 from user.serializers import UserSerializer
 from . import serializers
 from .models import Application, Saved_Date
-from cv_basic.models import CvBasic
 from cv_basic.serializers import DefaultCvSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from job_posting import serializers as jobpost_serializers
-from rest_framework.views import APIView
 from django.core.serializers import serialize
-import json
 from django.db.models import Q
 from rest_framework.pagination import LimitOffsetPagination
 from job_posting.models import JobPost
-# Create your views here.
 
 
 class ApplicationView(viewsets.ModelViewSet):
@@ -25,25 +20,24 @@ class ApplicationView(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     pagination_class = LimitOffsetPagination
 
-    # def create(self, request, *args, **kwargs):
-    #     try:
-    #         user = request.user
-    #         serializer = self.get_serializer(data=request.data)
-    #         serializer.is_valid(raise_exception=True)
-    #         application_data = serializer.data
-    #         job_posting = JobPost.objects.get(
-    #             pk=application_data.job_posting)
-    #         job_posting_applications = job_posting.applications
-    #         for application in job_posting_applications:
-    #             if application.applicant == user:
-    #                 return Response({'message': 'You have already applied to this job posting'}, status=status.HTTP_400_BAD_REQUEST)
-    #         self.perform_create(serializer)
-    #         headers = self.get_success_headers(serializer.data)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    #     except Exception as e:
-    #         print(getattr(e, 'message', repr(e)))
-    #         return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
-    #                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def create(self, request, *args, **kwargs):
+        try:
+            user = request.user
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            application_data = serializer.validated_data
+            job_posting_applications = Application.objects.filter(
+                job_posting=application_data['job_posting']).filter(applicant=user)
+            print(job_posting_applications)
+            if len(job_posting_applications) > 0:
+                return Response({'message': 'You already applied to this job posting'}, status=status.HTTP_403_FORBIDDEN)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except Exception as e:
+            print(getattr(e, 'message', repr(e)))
+            return Response({"message": getattr(e, 'message', repr(e))},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['get'], url_path="get_user_applications")
     def get_user_applications(self, request):
