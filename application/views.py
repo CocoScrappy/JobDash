@@ -15,6 +15,7 @@ from django.core.serializers import serialize
 import json
 from django.db.models import Q
 from rest_framework.pagination import LimitOffsetPagination
+from job_posting.models import JobPost
 # Create your views here.
 
 
@@ -23,6 +24,26 @@ class ApplicationView(viewsets.ModelViewSet):
     serializer_class = serializers.ApplicationSerializer
     queryset = Application.objects.all()
     pagination_class = LimitOffsetPagination
+
+    # def create(self, request, *args, **kwargs):
+    #     try:
+    #         user = request.user
+    #         serializer = self.get_serializer(data=request.data)
+    #         serializer.is_valid(raise_exception=True)
+    #         application_data = serializer.data
+    #         job_posting = JobPost.objects.get(
+    #             pk=application_data.job_posting)
+    #         job_posting_applications = job_posting.applications
+    #         for application in job_posting_applications:
+    #             if application.applicant == user:
+    #                 return Response({'message': 'You have already applied to this job posting'}, status=status.HTTP_400_BAD_REQUEST)
+    #         self.perform_create(serializer)
+    #         headers = self.get_success_headers(serializer.data)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    #     except Exception as e:
+    #         print(getattr(e, 'message', repr(e)))
+    #         return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
+    #                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['get'], url_path="get_user_applications")
     def get_user_applications(self, request):
@@ -60,9 +81,6 @@ class ApplicationView(viewsets.ModelViewSet):
         application_data = self.get_serializer(application).data
         application_data["job_posting"] = jobpost_serializers.JobPostSerializer(
             application.job_posting).data
-        # saved_dates = Saved_Date.objects.filter(
-        #     application=application).values()
-        # print(saved_dates, file=sys.stderr)
         application_data["saved_dates"] = serializers.SavedDatesSerializer(
             application.saved_dates, many=True).data
         return Response(application_data, status=status.HTTP_200_OK)
