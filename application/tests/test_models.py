@@ -53,6 +53,9 @@ class ApplicationTestCase(TestCase):
         # )
 
     def test_application_is_created_with_correct_fields(self):
+        '''
+        A user can register a new alication
+        '''
         test_application = Application.objects.get(pk=self.application.id)
         self.assertEqual(test_application, self.application)
         self.assertEqual(test_application.applicant.email,
@@ -64,6 +67,9 @@ class ApplicationTestCase(TestCase):
         self.assertEqual(test_application.cv.name, self.cv.name)
 
     def test_applicant_already_applied_should_raise_exception(self):
+        '''
+        A user cannot apply to the same application twice
+        '''
         with self.assertRaises(Exception):
             Application.objects.create(
                 job_posting=self.jobpost,

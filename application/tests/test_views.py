@@ -1,13 +1,12 @@
 from rest_framework.test import APITestCase
 from rest_framework.test import APIClient
 from rest_framework import status
-from ..models import Application, Saved_Date
+from ..models import Application
 from job_posting.models import JobPost
 from user.models import UserAccount
-from application.models import Application, Saved_Date
+from application.models import Application
 from cv_basic.models import CvBasic
 from rest_framework_simplejwt.tokens import RefreshToken
-import json
 
 
 class ApplicationViewsTest(APITestCase):
