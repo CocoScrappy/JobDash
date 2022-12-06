@@ -14,24 +14,24 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class CvsView(viewsets.ModelViewSet):
-    # permission_classes=[permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.DefaultCvSerializer
     queryset = CvBasic.objects.all()
-    
+
     def create(self, request):
         try:
             user = request.user
-            print(user)
+            # print(user)
             cv = request.data
             print(cv)
             cv["user"] = user.id
-            print(cv)
+            # print(cv)
             serializer = self.get_serializer(data=cv)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-            
+
         except CvBasic.DoesNotExist:
             return Response({"message": "Cannot find a CV for the requested user"},
                             status=status.HTTP_400_BAD_REQUEST)
@@ -56,5 +56,3 @@ class CvsView(viewsets.ModelViewSet):
         except CvBasic.DoesNotExist:
             return Response({"message": "Cannot find a CV for the requested user"},
                             status=status.HTTP_400_BAD_REQUEST)
-
-
