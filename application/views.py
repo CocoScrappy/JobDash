@@ -23,7 +23,11 @@ class ApplicationView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             user = request.user
+            request.data['applicant'] = user.id
+            # if request.data['applicant'] != user:
+            #     return Response({'message': "You cannot aply using other user's information"}, status=status.HTTP_401_UNAUTHORIZED)
             serializer = self.get_serializer(data=request.data)
+            print(request.data)
             serializer.is_valid(raise_exception=True)
             application_data = serializer.validated_data
             job_posting_applications = Application.objects.filter(
