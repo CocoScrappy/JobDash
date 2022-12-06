@@ -71,15 +71,37 @@ class ApplicationViewsTest(APITestCase):
         '''
         client = APIClient()
         client.force_authenticate(user=self.applicant2)
-        initial_applications_list = client.get(
-            '/api/applications/', format='json').data
+        initial_applications_list = Application.objects.all()
         initial_count = len(initial_applications_list)
         response = client.post('/api/applications/', {'job_posting': self.jobpost.id,
                                                       'cv': self.cv2.id,
                                                       'applicant': self.applicant2.id}, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        new_applications_list = client.get(
-            '/api/applications/', format='json').data
+        new_application_id = response.data['id']
+        new_application_from_db = Application.objects.get(
+            id=new_application_id)
+        self.assertEqual(response.data['cv'], new_application_from_db.cv.id)
+        new_applications_list = Application.objects.all()
+        new_count = len(new_applications_list)
+        self.assertTrue(new_count, initial_count)
+
+    def test_applicant_already_applied_should_raise_exception(self):
+        '''
+        A user cannot apply to the same application twice.
+        This test should return an exception
+        '''
+        refresh = RefreshToken.for_user(self.applicant1)
+        token = {"HTTP_AUTHORIZATION": f'Bearer {refresh.access_token}'}
+        initial_applications_list = Application.objects.all()
+        initial_count = len(initial_applications_list)
+        response = self.client.post('/api/applications/', data={'job_posting': self.jobpost.id,
+                                                                'cv': self.cv2.id,
+                                                                'applicant': self.applicant2.id}, **token, format='json')
+        print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['message'],
+                         'You already applied to this job posting')
+        new_applications_list = Application.objects.all()
         new_count = len(new_applications_list)
         self.assertTrue(new_count, initial_count)
 

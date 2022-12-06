@@ -1,52 +1,141 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, permissions
 import sys
-from user.models import UserAccount
 from user.serializers import UserSerializer
 from . import serializers
 from .models import Application, Saved_Date
-from cv_basic.models import CvBasic
 from cv_basic.serializers import DefaultCvSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from job_posting import serializers as jobpost_serializers
-from rest_framework.views import APIView
 from django.core.serializers import serialize
-import json
 from django.db.models import Q
 from rest_framework.pagination import LimitOffsetPagination
 from job_posting.models import JobPost
-# Create your views here.
 
 
 class ApplicationView(viewsets.ModelViewSet):
+    """
+
+    *Context*
+
+    **def create(self, request, *args, **kwargs):**
+
+    url = /api/applications/
+
+    method = post
+
+    Creates a new applications to a particular job posting.
+
+    The request body should include at least the required information in the :model:`application.Application` model, except for the applicant id which is extracted from the header's authorization token.
+
+    The method validates that the user did not apply for the same job posting before. If applying to same application twice, it will return an HTTP_403_FORBIDDEN response with an error message.
+
+
+    **def get_user_applications(self, request):**
+
+    url = /api/applications/get_user_applications/
+
+    method = get
+
+    gets the list of applications of the logged in user.
+
+    The method gets the user from the request header's token, then perform a query to the database to get the applications with applicant as the logged in user.
+
+    Returns a response with array of applications including necessary information for listing applications (id, job title, company, application date, remote option, favorited).
+
+    if no application found for the current user, it will return a response with an empty array.
+
+
+    **def details(self, request, pk=None):**
+
+    url = /api/applications/{pk}/details/
+
+    method = get
+
+    gets all the information associated with a job application (:model:`application.Application`), including job post (:model:`job_posting.JobPost`) and saved dates (:model:`application.Saved_Date`).
+
+    The method gets the user from the request header's token, then perform a a validation to check if the logged in user is authorized to get the application details (they should be the applicant).
+
+    Returns a response with JSON object conatining the application details.
+
+    If user requesting is not the application's aplicant, ir will return an error message with HTTP_401_UNAUTHORIZED status.
+
+
+
+    **def get_status_options(self, request):**
+
+    url = /api/applications/get_status_options
+
+    method = get
+
+    gets the job application status options from :model:`application.Application`.
+
+
+    **def search_applications(self, request):**
+
+    url = /api/applications/search_applications
+
+    method = get
+
+    Allows to search for the list of user's application, related to :model:`application.Application`, returns a serialized queryset with all the matches.
+
+    Gets the search string from the request body and the user id from the request user (token)
+
+
+    **def get_jobposting_application(self, request):**
+
+    url = /api/applications/get_jobposting_application/
+
+    method = get
+
+    Returns a paginated and serialized queryset for each applications to a particular job posting.
+
+    For each application the query composes an object made of application id, cv model and user model.
+
+    The employer id in job posting is verified against the request user id from the token.
+
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.ApplicationSerializer
     queryset = Application.objects.all()
     pagination_class = LimitOffsetPagination
 
-    # def create(self, request, *args, **kwargs):
-    #     try:
-    #         user = request.user
-    #         serializer = self.get_serializer(data=request.data)
-    #         serializer.is_valid(raise_exception=True)
-    #         application_data = serializer.data
-    #         job_posting = JobPost.objects.get(
-    #             pk=application_data.job_posting)
-    #         job_posting_applications = job_posting.applications
-    #         for application in job_posting_applications:
-    #             if application.applicant == user:
-    #                 return Response({'message': 'You have already applied to this job posting'}, status=status.HTTP_400_BAD_REQUEST)
-    #         self.perform_create(serializer)
-    #         headers = self.get_success_headers(serializer.data)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    #     except Exception as e:
-    #         print(getattr(e, 'message', repr(e)))
-    #         return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
-    #                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def create(self, request, *args, **kwargs):
+        try:
+            user = request.user
+            request.data['applicant'] = user.id
+            # if request.data['applicant'] != user:
+            #     return Response({'message': "You cannot aply using other user's information"}, status=status.HTTP_401_UNAUTHORIZED)
+            serializer = self.get_serializer(data=request.data)
+            print(request.data)
+            serializer.is_valid(raise_exception=True)
+            application_data = serializer.validated_data
+            job_posting_applications = Application.objects.filter(
+                job_posting=application_data['job_posting']).filter(applicant=user)
+            print(job_posting_applications)
+            if len(job_posting_applications) > 0:
+                return Response({'message': 'You already applied to this job posting'}, status=status.HTTP_403_FORBIDDEN)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except Exception as e:
+            print(getattr(e, 'message', repr(e)))
+            return Response({"message": getattr(e, 'message', repr(e))},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['get'], url_path="get_user_applications")
     def get_user_applications(self, request):
+        """
+        gets the list of applications of the logged in user.
+
+        The method gets the user from the request header's token, then perform a query to the database to get the applications with applicant as the logged in user.
+
+        Returns a response with array of applications including necessary information for listing applications (id, job title, company, application date, remote option, favorited).
+
+        if no application found for the current user, it will return a response with an empty array.
+
+        """
         try:
             user = request.user
             applications = Application.objects.filter(
@@ -74,6 +163,16 @@ class ApplicationView(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def details(self, request, pk=None):
+        """
+        gets all the information associated with a job application (:model:`application.Application`), including job post (:model:`job_posting.JobPost`) and saved dates (:model:`application.Saved_Date`).
+
+        The method gets the user from the request header's token, then perform a a validation to check if the logged in user is authorized to get the application details (they should be the applicant).
+
+        Returns a response with JSON object conatining the application details.
+
+        If user requesting is not the application's aplicant, ir will return an error message with HTTP_401_UNAUTHORIZED status.
+
+        """
         user = request.user
         application = self.get_object()
         if application.applicant != user:
@@ -87,6 +186,10 @@ class ApplicationView(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def get_status_options(self, request):
+        """
+        gets the job application status options from :model:`application.Application`.
+
+        """
         status_options = Application.STATUSES
         status_options_2 = [
             {"value": option[0], "label": option[1]} for option in status_options]
@@ -94,6 +197,13 @@ class ApplicationView(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'], url_path="search")
     def search_applications(self, request):
+        """
+
+        Allows to search for the list of user's application, related to :model:`application.Application`, returns a serialized queryset with all the matches.
+
+        gets the search string from the request body and the user id from the request user (token)
+
+        """
         print(request.data, file=sys.stderr)
         searchString = request.data['searchString']
         user = request.user

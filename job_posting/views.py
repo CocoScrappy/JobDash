@@ -1,6 +1,6 @@
 import sys
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from . import serializers
 from rest_framework.decorators import action
 from .models import JobPost
@@ -15,6 +15,7 @@ from rest_framework.pagination import LimitOffsetPagination
 
 
 class DefaultJobPostView(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.DefaultJobPostSerializer
     queryset = JobPost.objects.all()
 
@@ -31,6 +32,7 @@ class JobPostView(viewsets.ModelViewSet):
     uses request.user to get authenticated user id from token
 
     """
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.JobPostSerializer
     pagination_class = LimitOffsetPagination
     queryset = JobPost.objects.all()
@@ -85,7 +87,9 @@ class JobSearchView(APIView, LimitOffsetPagination):
         These queries will be trimmed to only include loc matches that match "remote_option" or "location". If no location was given, this step is skipped.
 
     """
+
     serializer_class = serializers.JobPostSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, par, loc=None):
         print(request.user, file=sys.stderr)
