@@ -1,4 +1,4 @@
-web: gunicorn django_config.wsgi
+#web: gunicorn django_config.wsgi
 # web: daphne <application>.asgi:application --port $PORT --bind 0.0.0.0
 
 web: daphne django_config.asgi:application --port $PORT --bind 0.0.0.0 -v2
