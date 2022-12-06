@@ -21,7 +21,7 @@ class DefaultJobPostView(viewsets.ModelViewSet):
 
 class JobPostView(viewsets.ModelViewSet):
     serializer_class = serializers.JobPostSerializer
-    pagination_class=LimitOffsetPagination
+    pagination_class = LimitOffsetPagination
     queryset = JobPost.objects.all()
 
     @action(detail=False, methods=['get'], url_path="get_user_postings")
@@ -41,15 +41,15 @@ class JobPostView(viewsets.ModelViewSet):
                                 status=status.HTTP_404_NOT_FOUND)
             else:
                 data = []
-                #pagination must happen before serialization
-                userPosts=self.paginate_queryset(userPosts)
+                # pagination must happen before serialization
+                userPosts = self.paginate_queryset(userPosts)
                 for post in userPosts:
-                    
+
                     posting = self.get_serializer(post).data
                     data.append(posting)
-                print(data)
+                # print(data)
                 return self.get_paginated_response(data)
-                #return Response(data, status=status.HTTP_200_OK)
+                # return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
@@ -58,38 +58,37 @@ class JobPostView(viewsets.ModelViewSet):
 
 class JobSearchView(APIView, LimitOffsetPagination):
     serializer_class = serializers.JobPostSerializer
-    
-    
+
     def get(self, request, par, loc=None):
         print(request.user, file=sys.stderr)
-        user=request.user
+        user = request.user
         searchTerms = par.split()
-        searchLocation=loc
+        searchLocation = loc
         query = None
         for t in searchTerms:
             q = JobPost.objects.filter(
                 Q(title__icontains=t) | Q(description__icontains=t))
-            
-            if searchLocation != None:
-                q=q.filter(Q(remote_option__icontains=loc)|Q(location__icontains=loc))
 
-            if user.role=='employer':
-                q=q.filter(employer=user.id)
+            if searchLocation != None:
+                q = q.filter(Q(remote_option__icontains=loc)
+                             | Q(location__icontains=loc))
+
+            if user.role == 'employer':
+                q = q.filter(employer=user.id)
 
             if query == None:
                 query = q
             else:
                 query = query | q
 
-        
-        query=self.paginate_queryset(query,request,view=self)
+        query = self.paginate_queryset(query, request, view=self)
 
-        responseQuery=[]
+        responseQuery = []
         for q in query:
             responseQuery.append(serializers.DefaultJobPostSerializer(q).data)
 
         #jsonquery = json.loads(DefaultJobPostSerializer(query).data)
 
         print(searchTerms, file=sys.stderr)
-        return LimitOffsetPagination.get_paginated_response(self,responseQuery)
-        #return Response(jsonquery, status=status.HTTP_200_OK)
+        return LimitOffsetPagination.get_paginated_response(self, responseQuery)
+        # return Response(jsonquery, status=status.HTTP_200_OK)
