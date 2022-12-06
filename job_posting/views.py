@@ -57,6 +57,22 @@ class JobPostView(viewsets.ModelViewSet):
 
 
 class JobSearchView(APIView, LimitOffsetPagination):
+    """
+    Allows to search for *internal* job postings, related to :model:`job_posting.JobPost`, returns a paginated and serialized queryset with all the matches.
+
+    **Context**
+
+    ``def get(self, request, par, loc=None):``
+        Takes in "par" as the search parameter, it can take several parameters. 
+        Takes in "loc" as an optional parameter for the location. It will try to find matches with both :model:`job_posting.JobPost`'s remote_options and location.
+    
+    ``q = JobPost.objects.filter(Q(title__icontains=t) | Q(description__icontains=t))``
+        Queries that match EITHER in the title OR in the description will be added to the Query Set
+
+    ``if searchLocation != None:q=q.filter(Q(remote_option__icontains=loc)|Q(location__icontains=loc))``
+        These queries will be trimmed to only include loc matches that match "remote_option" or "location". If no location was given, this step is skipped.
+
+    """
     serializer_class = serializers.JobPostSerializer
     
     
