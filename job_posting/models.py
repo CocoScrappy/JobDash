@@ -7,6 +7,10 @@ from django_config import settings
 
 
 class JobPost(models.Model):
+
+    def __str__(self):
+        return self.title
+
     REMOTE_OPTIONS = [
         ('remote', 'Remote'),
         ('hybrid', 'Hybrid'),

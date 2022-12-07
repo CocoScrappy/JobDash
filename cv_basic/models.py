@@ -9,4 +9,4 @@ class CvBasic(models.Model):
     content = models.TextField()
     
     def __str__(self):
-        return '%s' % (self.name)
+        return '%s -- %s' % (self.name, self.user)

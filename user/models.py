@@ -62,5 +62,5 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS=['first_name','last_name','role']
 
     def __str__(self):
-        return "Name: {first_name} {last_name}; Email: {email}".format(first_name = self.first_name, last_name = self.last_name, email = self.email)
+        return "{email}".format(email = self.email)
 
