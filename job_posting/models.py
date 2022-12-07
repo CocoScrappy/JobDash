@@ -28,6 +28,7 @@ class JobPost(models.Model):
     company = models.CharField(max_length=60, default='', blank=True)
     date_created = models.DateTimeField(default=datetime.now())
     link = models.URLField(null=True)
+    hash= models.CharField(max_length=255,null=True)
 
     remote_option = models.CharField(
         max_length=30,
