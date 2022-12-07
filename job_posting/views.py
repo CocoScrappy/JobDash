@@ -3,15 +3,71 @@ from django.shortcuts import render
 from rest_framework import viewsets, status, permissions
 from . import serializers
 from rest_framework.decorators import action
-from .models import JobPost
+from .models import JobPost, Skill
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.serializers import serialize
 import json
 from django.db.models import Q
 from rest_framework.pagination import LimitOffsetPagination
+from cv_basic.models import CvBasic
+from . import compare_html
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
+import nltk
+import requests
 
+# nltk.download('stopwords')
 # Create your views here.
+
+
+def skill_exists(skill):
+    try:
+        url = f'https://api.apilayer.com/skills?q={skill}&amp;count=1'
+        headers = {'apikey': 'KWmvnGBqLYTccSspokYbOOwIeLBUd9XB'}
+        response = requests.request('GET', url, headers=headers)
+        result = response.json()
+        # print(response)
+        # print(result)
+
+        if len(result) > 0:
+            for result_skill in result:
+                Skill.objects.create(name=result_skill)
+            return result[0].lower() == skill.lower()
+    except Exception as e:
+        return True
+
+
+def extract_skills(input_text, db_skills):
+    stop_words = set(nltk.corpus.stopwords.words('english'))
+    word_tokens = nltk.tokenize.word_tokenize(input_text)
+
+    # remove the stop words
+    filtered_tokens = [w for w in word_tokens if w not in stop_words]
+
+    # remove the punctuation
+    filtered_tokens = [w for w in word_tokens if w.isalpha()]
+
+    # generate bigrams and trigrams (such as artificial intelligence)
+    # bigrams_trigrams = list(
+    #     map(' '.join, nltk.everygrams(filtered_tokens, 2, 3)))
+
+    # we create a set to keep the results in.
+    filtered_tokens = set(filtered_tokens)
+    found_skills = filtered_tokens.intersection(db_skills)
+    tokens_not_in_db = filtered_tokens.difference(db_skills)
+
+    # we search for each token in our skills database
+    for token in tokens_not_in_db:
+        if skill_exists(token.lower()):
+            found_skills.add(token.lower())
+
+    # we search for each bigram and trigram in our skills database
+    # for ngram in bigrams_trigrams:
+    #     if skill_exists(ngram.lower()):
+    #         found_skills.add(ngram.lower())
+
+    return found_skills
 
 
 class DefaultJobPostView(viewsets.ModelViewSet):
@@ -124,3 +180,31 @@ class JobSearchView(APIView, LimitOffsetPagination):
         print(searchTerms, file=sys.stderr)
         return LimitOffsetPagination.get_paginated_response(self, responseQuery)
         # return Response(jsonquery, status=status.HTTP_200_OK)
+
+
+class JobMatchView(APIView, LimitOffsetPagination):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args,):
+        user = request.user
+        jobId = request.data['jobId']
+
+        resume = CvBasic.objects.get(user=user).content
+        job_description = JobPost.objects.get(pk=jobId).description
+
+        resume_text = compare_html.extract_text_from_docx(resume)
+        job_description_text = compare_html.extract_text_from_docx(
+            job_description)
+
+        db_skills = set(Skill.objects.all())
+        required_skills = extract_skills(job_description_text, db_skills)
+        required_skills = set(required_skills)
+        # required_skills_text = ' '.join(required_skills)
+        # text = [resume_text, required_skills_text]
+        # matchPercentage = compare_html.get_text_matching_score(text)
+        matching_skills = compare_html.get_matching_skills(
+            resume_text, required_skills)
+        matching_score = len(matching_skills)/len(required_skills)
+        matching_score = round(matching_score, 2)
+
+        return Response({"matching_score": matching_score}, status=status.HTTP_200_OK)
