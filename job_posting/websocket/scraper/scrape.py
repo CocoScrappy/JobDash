@@ -24,6 +24,7 @@ def scraper(searchQuery,searchLocation,self):
     options.add_argument("--no-sandbox")
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
+    options.add_argument('--window-size=1920x1480')
     #driver=webdriver.Chrome(executable_path=path,options=options)
     driver=webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=options)
     
