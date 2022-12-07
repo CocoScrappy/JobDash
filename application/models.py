@@ -18,7 +18,7 @@ class Application(models.Model):
     ]
 
     job_posting = models.ForeignKey(
-        JobPost, related_name='applications', on_delete=models.DO_NOTHING)
+        JobPost, related_name='applications', on_delete=models.CASCADE)
     cv = models.ForeignKey(
         cv_models.CvBasic, related_name='applications', on_delete=models.DO_NOTHING)
     applicant = models.ForeignKey(
@@ -33,6 +33,9 @@ class Application(models.Model):
         choices=STATUSES,
         default='applied',
     )
+
+    def __str__(self):
+        return 'Application: %s for %s' %( self.applicant, self.job_posting)
 
 
 class Saved_Date(models.Model):
