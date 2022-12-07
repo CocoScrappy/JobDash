@@ -99,10 +99,10 @@ def extract_skills(input_text, db_skills):
     # word_tokens = nltk.tokenize.word_tokenize(input_text)
 
     # remove the stop words
-    filtered_tokens = [w for w in word_tokens if w not in stop_words]
+    # filtered_tokens = [w for w in word_tokens if w not in stop_words]
 
-    # remove the punctuation
-    filtered_tokens = [w for w in word_tokens if w.isalpha()]
+    # # remove the punctuation
+    # filtered_tokens = [w for w in word_tokens if w.isalpha()]
     # filtered_tokens = [w.lower() for w in word_tokens]
 
     # generate bigrams and trigrams (such as artificial intelligence)
@@ -110,9 +110,9 @@ def extract_skills(input_text, db_skills):
     #     map(' '.join, nltk.everygrams(filtered_tokens, 2, 3)))
 
     # we create a set to keep the results in.
-    filtered_tokens = set(filtered_tokens)
-    found_skills = filtered_tokens.intersection(db_skills)
-    tokens_not_in_db = filtered_tokens.difference(db_skills)
+    word_tokens = set(word_tokens)
+    found_skills = word_tokens.intersection(db_skills)
+    tokens_not_in_db = word_tokens.difference(db_skills)
 
     # we search for each token in our skills database
     for token in tokens_not_in_db:
@@ -242,7 +242,7 @@ class JobSearchView(APIView, LimitOffsetPagination):
 class JobMatchView(APIView, LimitOffsetPagination):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, *args,):
+    def post(self, request, *args,):
         user = request.user
         jobId = request.data['jobId']
 
@@ -262,7 +262,7 @@ class JobMatchView(APIView, LimitOffsetPagination):
         matching_skills_results = get_matching_skills(
             resume_text, required_skills)
         matching_score = len(
-            matching_skills_results['found_skills'])/len(required_skills)
+            matching_skills_results['found_skills'])*100/len(required_skills)
         matching_score = round(matching_score, 2)
 
         return Response({"matching_score": matching_score, 'matching_skills_results': matching_skills_results}, status=status.HTTP_200_OK)
