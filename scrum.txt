@@ -1,3 +1,115 @@
+December 7th, 2022 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Got ws to successfully work on Heroku 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Add admin crud, prevent job posting duplication, prettify loading bar, add to documentation 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+Nothing 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+- fixed some things on job postings 
+
+- got stuck on dashboard 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+-  finish employer application list 
+
+- work on presentation 
+
+- add active tag to pagination 
+
+- other small job posting fixes? 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Dashboard is a buggy and hellish landscape of doom, (might have to do with dashboardLayout component and use effect refresh) 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+- Hide secrets to make repo public - Done 
+
+- Looked into fixing the like button on Job Application page – Not feasible 
+
+- Fixed Alert on External Job Application 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- Fix validation for Job Application and External Job Application 
+
+- Use Louis’s flash compunent for error display for Job Application and External Job Application 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Nothing at this point 
+
+ 
+
+Alina 
+
+1.What I have done / not done since last Scrum? 
+
+- Replaced reset button on Job Applications with functionality where reset occurs when input in empty 
+
+- Grid layout and Cards Layout for Job Finding page 
+
+- Styled Pagination & page limit 
+
+- Home page 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- Finish Nav, CV page, Dashboard & Applications Page  
+
+- Remove modal on Find Jobs page -> Clicking job card directs to Job Application Form 
+
+- Clicking Apply now directly is a shortcut to apply to the job right away 
+
+- Clean up recruiter side  
+
+- Style found skills tag and score percentage 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+ 
+
+Ali 
+
+1.What I have done / not done since last Scrum? 
+
+Done 
+
+CV analyzer 
+
+Django views documentation 
+
+Backend validation for authorization 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Add features 
+
+Add cv analyzer to frntend 
+
+Prepare for final presentation 
+
+3. Where do I need assistance? What do I need to figure out? 
+
 December 6th, 2022 
 
  
