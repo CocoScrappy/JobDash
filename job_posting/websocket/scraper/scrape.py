@@ -83,13 +83,15 @@ def scraper(searchQuery,searchLocation,self):
         #finds LINK TO APPLICATION
         jobLink=driver.find_element(By.XPATH,'//a[@data-testid="svx_jobCard-title"]').get_attribute("href")
 
-        #MAKES SURE JOB DOESN'T EXIST AS TO NOT RECREATE IT -- ASSUMES LINK IS UNCHANGING
+        #MAKES SURE JOB DOESN'T EXIST AS TO NOT RECREATE IT
+        #HASH CREATION
+        jobHash=str(hash(jobTitle+descElementCleaned))
         job=None
-
+        print(jobHash,file=sys.stderr)
         try:
-            job=JobPost.objects.get(link=jobLink)
+            job=JobPost.objects.get(hash=jobHash)
         except:
-            job=JobPost.objects.create(employer=externalAccount,title=jobTitle,location=location,description=descElementCleaned,company=companyName,date_created=postDate,link=jobLink)
+            job=JobPost.objects.create(employer=externalAccount,title=jobTitle,location=location,description=descElementCleaned,company=companyName,date_created=postDate,link=jobLink,hash=jobHash)
         
         scraps.append(DefaultJobPostSerializer(job).data)
         currCard+=1.0
