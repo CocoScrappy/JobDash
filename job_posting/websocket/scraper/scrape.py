@@ -9,13 +9,12 @@ from job_posting.serializers import DefaultJobPostSerializer
 import json
 from django.core.serializers import serialize
 import os
-
+from decouple import config
 
 def scraper(searchQuery,searchLocation,self):
 
     externalAccount=UserAccount.objects.get(pk=14)
 
-    path=r'.\\chromedriver'
     #https://stackoverflow.com/questions/37883759/errorssl-client-socket-openssl-cc1158-handshake-failed-with-chromedriver-chr
     options=webdriver.ChromeOptions()
     options.binary_location=os.environ.get("GOOGLE_CHROME_BIN")
@@ -26,8 +25,8 @@ def scraper(searchQuery,searchLocation,self):
     options.add_argument('--ignore-ssl-errors')
     options.add_argument('--window-size=1920x1480')
     #driver=webdriver.Chrome(executable_path=path,options=options)
-    driver=webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=options)
-    
+    #driver=webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=options)
+    driver=webdriver.Chrome(executable_path=config("CHROMEDRIVER_PATH"),chrome_options=options)
 
 
     print("Inside Scraper", file=sys.stderr)
