@@ -18,6 +18,7 @@ from datetime import timedelta
 import os
 import django_heroku
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,10 +29,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # os.environ.get('SECRET_KEY')
-SECRET_KEY = 'django-insecure-!w8e(9y1gn)s7=1y@vxr0sgyu$v8x2_1#$)nc@g#$l(1%b8z%*'
+
+SECRET_KEY = config('SECRET_KEY')
+dbSECRET = config('dbSECRET')
+dbUSER = config('dbUSER')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -98,15 +102,6 @@ CHANNEL_LAYERS={
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# Azure Key Vault - make work later
-# credential = DefaultAzureCredential()
-# client = SecretClient(
-#     vault_url="https://jobdash-kv.vault.azure.net/",
-#     credential=credential
-# )
-# db_secret = client.get_secret("jobdash-db-pass")
-
-# Env variables - use for now
 
 
 DATABASES = {
@@ -117,8 +112,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jobdash-db',
-        'USER': 'AdminFSD04',
-        'PASSWORD': '11^9v2s#T&O#',
+        'USER': dbUSER,
+        'PASSWORD': dbSECRET,
         'HOST': 'jobdash-mysql-db.mysql.database.azure.com',
         'PORT': '3306',
     }
