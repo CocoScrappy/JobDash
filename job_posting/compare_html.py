@@ -6,6 +6,7 @@ import requests
 # from . import models
 
 # nltk.download('punkt')
+nltk.download('stopwords')
 
 # resume = """<p>ALI NEHME, Ph.D.</p>
 #  <p>Tel: +1 (438) 334-1206 | Email: <a href="mailto:ali.hassan.nehme@gmail.com" target="_self">ali.nehme@biomedinfo.co</a> | Address: Brossard (Quebec), Canada</p>
