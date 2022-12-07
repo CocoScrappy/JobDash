@@ -1,34 +1,19 @@
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-from nltk.corpus import stopwords
 import sys
-from django.shortcuts import render
 from rest_framework import viewsets, status, permissions
 from . import serializers
 from rest_framework.decorators import action
 from .models import JobPost, Skill
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.core.serializers import serialize
-import json
 from django.db.models import Q
 from rest_framework.pagination import LimitOffsetPagination
 from cv_basic.models import CvBasic
 from . import compare_html
-from sklearn.metrics.pairwise import cosine_similarity
-import nltk
 import requests
 import html2text
-import spacy
 from sklearn.feature_extraction.text import CountVectorizer
 import os
 
-sp = spacy.load('en_core_web_sm')
-spacy_stopwords = set(sp.Defaults.stop_words)
-nltk_stopwords = set(nltk.corpus.stopwords.words('english'))
-
-stop_words = spacy_stopwords.union(nltk_stopwords.union(ENGLISH_STOP_WORDS))
-stop_words = set(stop_words)
-nltk.download('stopwords')
 
 # Create your views here.
 
@@ -46,20 +31,8 @@ def extract_text_from_docx(html):
 def get_matching_skills(input_text, skills):
     skills = set(skills)
 
-    # stop_words = set(nltk.corpus.stopwords.words('english'))
-    # word_tokens = nltk.tokenize.word_tokenize(input_text)
-
-    # # remove the stop words
-    # filtered_tokens = [w for w in word_tokens if w not in stop_words]
-
-    # # remove the punctuation
-    # filtered_tokens = [w for w in word_tokens if w.isalpha()]
-
-    # # generate bigrams and trigrams (such as artificial intelligence)
-    # bigrams_trigrams = list(
-    #     map(' '.join, nltk.everygrams(filtered_tokens, 2, 2)))
-
-    vectorizer = CountVectorizer(stop_words=stop_words, ngram_range=(1, 2))
+    vectorizer = CountVectorizer(
+        stop_words=compare_html.STOP_WORDS, ngram_range=(1, 2))
     X = vectorizer.fit_transform([input_text])
     word_tokens = vectorizer.get_feature_names_out()
 
@@ -96,8 +69,7 @@ def skill_exists(skill):
 
 
 def extract_skills(input_text):
-    # stop_words = set(nltk.corpus.stopwords.words('english'))
-    vectorizer = CountVectorizer(stop_words=stop_words)
+    vectorizer = CountVectorizer(stop_words=compare_html.STOP_WORDS)
     X = vectorizer.fit_transform([input_text])
     word_tokens = vectorizer.get_feature_names_out()
     word_tokens = set(word_tokens)
@@ -106,21 +78,6 @@ def extract_skills(input_text):
         isSkill=True).values_list('name', flat=True)
     db_tokens = Skill.objects.all().values_list('name', flat=True)
 
-    # word_tokens = nltk.tokenize.word_tokenize(input_text)
-
-    # remove the stop words
-    # filtered_tokens = [w for w in word_tokens if w not in stop_words]
-
-    # # remove the punctuation
-    # filtered_tokens = [w for w in word_tokens if w.isalpha()]
-    # filtered_tokens = [w.lower() for w in word_tokens]
-
-    # generate bigrams and trigrams (such as artificial intelligence)
-    # bigrams_trigrams = list(
-    #     map(' '.join, nltk.everygrams(filtered_tokens, 2, 3)))
-
-    # we create a set to keep the results in.
-
     required_skills = word_tokens.intersection(db_skills)
     tokens_not_in_db = word_tokens.difference(db_tokens)
 
@@ -128,11 +85,6 @@ def extract_skills(input_text):
     for token in tokens_not_in_db:
         if skill_exists(token.lower()):
             required_skills.add(token.lower())
-
-    # we search for each bigram and trigram in our skills database
-    # for ngram in bigrams_trigrams:
-    #     if skill_exists(ngram.lower()):
-    #         found_skills.add(ngram.lower())
 
     return required_skills
 
@@ -242,11 +194,8 @@ class JobSearchView(APIView, LimitOffsetPagination):
         for q in query:
             responseQuery.append(serializers.DefaultJobPostSerializer(q).data)
 
-        #jsonquery = json.loads(DefaultJobPostSerializer(query).data)
-
         print(searchTerms, file=sys.stderr)
         return LimitOffsetPagination.get_paginated_response(self, responseQuery)
-        # return Response(jsonquery, status=status.HTTP_200_OK)
 
 
 class JobMatchView(APIView, LimitOffsetPagination):
@@ -265,9 +214,6 @@ class JobMatchView(APIView, LimitOffsetPagination):
 
         required_skills = extract_skills(job_description_text)
         required_skills = set(required_skills)
-        # required_skills_text = ' '.join(required_skills)
-        # text = [resume_text, required_skills_text]
-        # matchPercentage = compare_html.get_text_matching_score(text)
         matching_skills_results = get_matching_skills(
             resume_text, required_skills)
         matching_score = len(
@@ -281,11 +227,8 @@ class GetDbSkillsView(APIView, LimitOffsetPagination):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args,):
-
         db_skills = Skill.objects.filter(
             isSkill=True).values_list('name', flat=True)
-        # db_skills_list = [skill['name'] for skill in db_skills_objects]
-
         return Response(db_skills, status=status.HTTP_200_OK)
 
 
@@ -295,8 +238,6 @@ class GetDbNotSkillTokensView(APIView, LimitOffsetPagination):
     def get(self, request, *args,):
         db_skills = Skill.objects.filter(
             isSkill=False).values_list('name', flat=True)
-        # db_skills_list = [skill['name'] for skill in db_skills_objects]
-
         return Response(db_skills, status=status.HTTP_200_OK)
 
 
@@ -304,8 +245,5 @@ class GetDbSkillTokensView(APIView, LimitOffsetPagination):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args,):
-
         db_skills = Skill.objects.all().values_list('name', flat=True)
-        # db_skills_list = [skill['name'] for skill in db_skills_objects]
-
         return Response(db_skills, status=status.HTTP_200_OK)
