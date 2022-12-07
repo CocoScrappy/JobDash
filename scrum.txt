@@ -1,3 +1,71 @@
+December 6th, 2022 
+
+ 
+
+Louis 
+
+1.What I have done / not done since last Scrum? 
+
+-  converted alerts to flash messages in job posting 
+
+- did some commenting on job posting pages 
+
+- started looking into front end test (Jest and RTL) 
+
+2. What I plan to do from this scrum to next? (next 72 hours) 
+
+-  Look into testing some more 
+
+- write some documentation on the backend 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- I’m open to help on other things! 
+
+ 
+
+Dmitry 
+
+1.What I have done / not done since last Scrum? 
+
+- Dealing with deployments – Done, only need to deploy Rami’s scraping to Heroku 
+
+- External applications - Done 
+
+- Hide secrets – not reached yet 
+
+ 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+- Hide secrets to make repo public 
+
+- Documentation for backend – to be assigned 
+
+- Help Alina with styling if she needs help 
+
+ 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+- Nothing at this point 
+
+ 
+
+Rami 
+
+1.What I have done / not done since last Scrum? 
+
+Debugged register and login, added documentation support, started working on porting the dyno into ws protocol 
+
+2. What I plan to do from this scrum to next? (next 24 hours) 
+
+Get the webscraper working on heroku, add admin functionalities, polish scraper 
+
+3. Where do I need assistance? What do I need to figure out? 
+
+nothing 
+
 December 5th, 2022 
 
  
