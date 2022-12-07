@@ -175,6 +175,8 @@ CORS_ALLOWED_ORIGINS = (
 CORS_ALLOW_HEADERS = list(default_headers) + ['email'] + ['posting']
 # CORS_ALLOW_ALL_ORIGINS = True
 
+CSRF_TRUSTED_ORIGINS = ['https://jobdash1.herokuapp.com']
+
 # REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permission.AllowAny']}
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
