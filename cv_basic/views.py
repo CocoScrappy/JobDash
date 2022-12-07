@@ -14,11 +14,50 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class CvsView(viewsets.ModelViewSet):
+    '''
+    *Context*
+
+    **def create(self, request):**
+
+        url = /api/applications/
+
+        method = post
+
+        Override ModelViewSet's create functionality to ensure that the authenticated user's id is attached to the created CV.
+
+        The applicant id is extracted from the header's token and attached to the CV data before creating the record.
+
+        returns the created CV with HTTP_201_CREATED status
+
+    **def get_user_cvs(self, request):**
+
+        url = /api/applications/get_user_cvs/
+
+        method = get
+
+        get the logged-in user's cv by using the user's info from the authorization token
+
+        returns a serialized CV object with HTTP_200_OK status
+
+        returns HTTP_400_BAD_REQUEST with a message if user has no cv created yet
+
+    '''
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.DefaultCvSerializer
     queryset = CvBasic.objects.all()
 
     def create(self, request):
+        """
+        url = /api/applications/
+
+        method = post
+
+        Override ModelViewSet's create functionality to ensure that the authenticated user's id is attached to the created CV.
+
+        The applicant id is extracted from the header's token and attached to the CV data before creating the record.
+
+        returns the created CV with HTTP_201_CREATED status
+        """
         try:
             user = request.user
             # print(user)
@@ -38,6 +77,17 @@ class CvsView(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path="get_user_cvs")
     def get_user_cvs(self, request):
+        """
+        url = /api/applications/get_user_cvs/
+
+        method = get
+
+        get the logged-in user's cv by using the user's info from the authorization token
+
+        returns a serialized CV object with HTTP_200_OK status
+
+        returns HTTP_400_BAD_REQUEST with a message if user has no cv created yet
+        """
         # JWT_authenticator = JWTAuthentication()
         # response = JWT_authenticator.authenticate(request)
         # if response is not None:

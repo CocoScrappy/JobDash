@@ -21,6 +21,17 @@ class DefaultJobPostView(viewsets.ModelViewSet):
 
 
 class JobPostView(viewsets.ModelViewSet):
+    """
+    For users : Gets all *internal* job postings.
+    For employers: Get all *internal* job posting for that user via the auth token Id.
+    Returns a paginated and serialized queryset with all the matches.
+
+    **Context**
+
+    ``def get_user_job_postings(self, request):``
+    uses request.user to get authenticated user id from token
+
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.JobPostSerializer
     pagination_class = LimitOffsetPagination
@@ -28,17 +39,7 @@ class JobPostView(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path="get_user_postings")
     def get_user_postings(self, request):
-        """
-        For users : Gets all *internal* job postings.
-        For employers: Get all *internal* job posting for that user via the auth token Id.
-        Returns a paginated and serialized queryset with all the matches.
 
-        **Context**
-
-        ``def get_user_job_postings(self, request):``
-        uses request.user to get authenticated user id from token
-
-        """
         try:
             user = request.user
 

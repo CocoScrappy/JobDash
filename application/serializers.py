@@ -38,6 +38,13 @@ class ApplicationSerializerForEmployer(serializers.ModelSerializer):
         fields = 'id', 'cv', 'applicant'
 
 
+class ApplicationSerializerForDashboard(serializers.ModelSerializer):
+
+    class Meta:
+        model = Application
+        fields = ('id', 'favorited', 'status')
+
+
 class DefaultApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
