@@ -8,6 +8,8 @@ from job_posting.models import JobPost
 from job_posting.serializers import DefaultJobPostSerializer
 import json
 from django.core.serializers import serialize
+import os
+
 
 def scraper(searchQuery,searchLocation,self):
 
@@ -16,10 +18,14 @@ def scraper(searchQuery,searchLocation,self):
     path=r'.\\chromedriver'
     #https://stackoverflow.com/questions/37883759/errorssl-client-socket-openssl-cc1158-handshake-failed-with-chromedriver-chr
     options=webdriver.ChromeOptions()
+    options.binary_location=os.environ.get("GOOGLE_CHROME_BIN")
+    options.add_argument("--headless")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--no-sandbox")
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
-    driver=webdriver.Chrome(executable_path=path,options=options)
-
+    #driver=webdriver.Chrome(executable_path=path,options=options)
+    driver=webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=options)
     
 
 
