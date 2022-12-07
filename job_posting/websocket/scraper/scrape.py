@@ -83,8 +83,14 @@ def scraper(searchQuery,searchLocation,self):
         #finds LINK TO APPLICATION
         jobLink=driver.find_element(By.XPATH,'//a[@data-testid="svx_jobCard-title"]').get_attribute("href")
 
-        #scraps.append(scrapeModel.ScrapeModel(companyName,jobTitle,location,descElementCleaned,postDate,jobLink))
-        job=JobPost.objects.create(employer=externalAccount,title=jobTitle,location=location,description=descElementCleaned,company=companyName,date_created=postDate,link=jobLink)
+        #MAKES SURE JOB DOESN'T EXIST AS TO NOT RECREATE IT -- ASSUMES LINK IS UNCHANGING
+        job=None
+
+        try:
+            job=JobPost.objects.get(link=jobLink)
+        except:
+            job=JobPost.objects.create(employer=externalAccount,title=jobTitle,location=location,description=descElementCleaned,company=companyName,date_created=postDate,link=jobLink)
+        
         scraps.append(DefaultJobPostSerializer(job).data)
         currCard+=1.0
         percentage=f'{100*currCard/numOfResults:.2f}'
