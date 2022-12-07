@@ -20,7 +20,7 @@ import requests
 import html2text
 import spacy
 from sklearn.feature_extraction.text import CountVectorizer
-from operator import attrgetter
+import os
 
 sp = spacy.load('en_core_web_sm')
 spacy_stopwords = set(sp.Defaults.stop_words)
@@ -79,7 +79,7 @@ def get_matching_skills(input_text, skills):
 def skill_exists(skill):
     try:
         url = f'https://api.apilayer.com/skills?q={skill}&amp;count=1'
-        headers = {'apikey': 'KWmvnGBqLYTccSspokYbOOwIeLBUd9XB'}
+        headers = {'apikey': os.environ.get('SKILLS_API_TOKEN')}
         response = requests.request('GET', url, headers=headers)
         result = response.json()
         # print(response)
