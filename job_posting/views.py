@@ -26,7 +26,8 @@ spacy_stopwords = set(sp.Defaults.stop_words)
 nltk_stopwords = set(nltk.corpus.stopwords.words('english'))
 
 stop_words = spacy_stopwords.union(nltk_stopwords.union(ENGLISH_STOP_WORDS))
-# nltk.download('stopwords')
+nltk.download('stopwords')
+
 # Create your views here.
 
 
