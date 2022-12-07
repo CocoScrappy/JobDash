@@ -25,45 +25,6 @@ import requests
 # You will be responsible for writing clean, robust software code using best practice development in an agile environment as well as have the opportunity to be part of the transition of our applications to the cloud.If you feel you are the right fit for this role please email me your word resume to aaron.lail@randstad.ca AdvantagesWe advance the mining industry towards a safer, more efficient, and more sustainable future through the delivery of innovative software solutions and deep domain mining expertise. Guided by our underlying principles of mining expertise, innovation, and sustainability, we strive to create safer, more efficient and more sustainable operations for our mining customers.ResponsibilitiesKey Responsibilities• Design and produce high quality software code• Assist with the integration of new features• Support development by undertaking analysis, testing, and troubleshooting• Adhere to software quality standards and corporate objectives• Contribute towards the software development roadmap• Document and support our clients software solutionsQualificationsAbout You• Strong professional experience of 5 years or more in C++ is required• Experience in C#, .NET, and SQL development highly regardedSummaryIf you feel you are the right fit for this role please email me your word resume to aaron.lail@randstad.ca Randstad Canada is committed to fostering a workforce reflective of all peoples of Canada. As a result, we are committed to developing and implementing strategies to increase the equity, diversity and inclusion within the workplace by examining our internal policies, practices, and systems throughout the entire lifecycle of our workforce, including its recruitment, retention and advancement for all employees. In addition to our deep commitment to respecting human rights, we are dedicated to positive actions to affect change to ensure everyone has full participation in the workforce free from any barriers, systemic or otherwise, especially equity-seeking groups who are usually underrepresented in Canada's workforce, including those who identify as women or non-binary/gender non-conforming; Indigenous or Aboriginal Peoples; persons with disabilities (visible or invisible) and; members of visible minorities, racialized groups and the LGBTQ2+ community.Randstad Canada is committed to creating and maintaining an inclusive and accessible workplace for all its candidates and employees by supporting their accessibility and accommodation needs throughout the employment lifecycle. We ask that all job applications please identify any accommodation requirements by sending an email to accessibility@randstad.ca to ensure their ability to fully participate in the interview process."""
 
 
-def extract_text_from_docx(html):
-    h = html2text.HTML2Text()
-    h.ignore_links = True
-    txt = h.handle(html)
-    if txt:
-        return txt.replace('\t', ' ')
-    return None
-
-
-def get_matching_skills(input_text, skills):
-    stop_words = set(nltk.corpus.stopwords.words('english'))
-    word_tokens = nltk.tokenize.word_tokenize(input_text)
-
-    # remove the stop words
-    filtered_tokens = [w for w in word_tokens if w not in stop_words]
-
-    # remove the punctuation
-    filtered_tokens = [w for w in word_tokens if w.isalpha()]
-
-    # generate bigrams and trigrams (such as artificial intelligence)
-    bigrams_trigrams = list(
-        map(' '.join, nltk.everygrams(filtered_tokens, 2, 2)))
-
-    # we create a set to keep the results in.
-    found_skills = set()
-
-    # we search for each token in our skills
-    for token in filtered_tokens:
-        if token.lower() in skills:
-            found_skills.add(token.lower())
-
-    # we search for each bigram and trigram in our skills database
-    for ngram in bigrams_trigrams:
-        if ngram.lower() in skills:
-            found_skills.add(ngram.lower())
-
-    return found_skills
-
-
 def get_text_matching_matrix(text):
     nltk.download('stopwords')
     stop_words = set(nltk.corpus.stopwords.words('english'))
