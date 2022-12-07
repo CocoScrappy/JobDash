@@ -46,3 +46,4 @@ class JobPost(models.Model):
 
 class Skill(models.Model):
     name = models.CharField(max_length=250, unique=True)
+    isSkill = models.BooleanField(default=True)

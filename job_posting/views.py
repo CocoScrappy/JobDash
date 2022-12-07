@@ -20,12 +20,14 @@ import requests
 import html2text
 import spacy
 from sklearn.feature_extraction.text import CountVectorizer
+import os
 
 sp = spacy.load('en_core_web_sm')
 spacy_stopwords = set(sp.Defaults.stop_words)
 nltk_stopwords = set(nltk.corpus.stopwords.words('english'))
 
 stop_words = spacy_stopwords.union(nltk_stopwords.union(ENGLISH_STOP_WORDS))
+stop_words = set(stop_words)
 nltk.download('stopwords')
 
 # Create your views here.
@@ -62,22 +64,22 @@ def get_matching_skills(input_text, skills):
     word_tokens = vectorizer.get_feature_names_out()
 
     # we create a set to keep the results in.
-    found_skills = set()
+    matching_skills = set()
 
     # we search for each token in our skills
     for token in word_tokens:
         if token.lower() in skills:
-            found_skills.add(token.lower())
+            matching_skills.add(token.lower())
 
-    not_found_skills = set(skills.difference(found_skills))
+    missing_skills = set(skills.difference(matching_skills))
 
-    return {'found_skills': found_skills, 'missing_skills': not_found_skills}
+    return {'matching_skills': matching_skills, 'missing_skills': missing_skills}
 
 
 def skill_exists(skill):
     try:
         url = f'https://api.apilayer.com/skills?q={skill}&amp;count=1'
-        headers = {'apikey': 'KWmvnGBqLYTccSspokYbOOwIeLBUd9XB'}
+        headers = {'apikey': os.environ.get('SKILLS_API_TOKEN')}
         response = requests.request('GET', url, headers=headers)
         result = response.json()
         # print(response)
@@ -87,15 +89,23 @@ def skill_exists(skill):
             for result_skill in result:
                 Skill.objects.create(name=result_skill)
             return result[0].lower() == skill.lower()
+        else:
+            Skill.objects.create(name=skill, isSkill=False)
     except Exception as e:
         return True
 
 
-def extract_skills(input_text, db_skills):
+def extract_skills(input_text):
     # stop_words = set(nltk.corpus.stopwords.words('english'))
     vectorizer = CountVectorizer(stop_words=stop_words)
     X = vectorizer.fit_transform([input_text])
     word_tokens = vectorizer.get_feature_names_out()
+    word_tokens = set(word_tokens)
+
+    db_skills = Skill.objects.filter(
+        isSkill=True).values_list('name', flat=True)
+    db_tokens = Skill.objects.all().values_list('name', flat=True)
+
     # word_tokens = nltk.tokenize.word_tokenize(input_text)
 
     # remove the stop words
@@ -110,21 +120,21 @@ def extract_skills(input_text, db_skills):
     #     map(' '.join, nltk.everygrams(filtered_tokens, 2, 3)))
 
     # we create a set to keep the results in.
-    word_tokens = set(word_tokens)
-    found_skills = word_tokens.intersection(db_skills)
-    tokens_not_in_db = word_tokens.difference(db_skills)
+
+    required_skills = word_tokens.intersection(db_skills)
+    tokens_not_in_db = word_tokens.difference(db_tokens)
 
     # we search for each token in our skills database
     for token in tokens_not_in_db:
         if skill_exists(token.lower()):
-            found_skills.add(token.lower())
+            required_skills.add(token.lower())
 
     # we search for each bigram and trigram in our skills database
     # for ngram in bigrams_trigrams:
     #     if skill_exists(ngram.lower()):
     #         found_skills.add(ngram.lower())
 
-    return found_skills
+    return required_skills
 
 
 class DefaultJobPostView(viewsets.ModelViewSet):
@@ -253,8 +263,7 @@ class JobMatchView(APIView, LimitOffsetPagination):
         job_description_text = extract_text_from_docx(
             job_description)
 
-        db_skills = set(Skill.objects.all())
-        required_skills = extract_skills(job_description_text, db_skills)
+        required_skills = extract_skills(job_description_text)
         required_skills = set(required_skills)
         # required_skills_text = ' '.join(required_skills)
         # text = [resume_text, required_skills_text]
@@ -262,7 +271,41 @@ class JobMatchView(APIView, LimitOffsetPagination):
         matching_skills_results = get_matching_skills(
             resume_text, required_skills)
         matching_score = len(
-            matching_skills_results['found_skills'])*100/len(required_skills)
-        matching_score = round(matching_score, 2)
+            matching_skills_results['matching_skills'])*100/len(required_skills)
+        matching_score = round(matching_score, 0)
 
         return Response({"matching_score": matching_score, 'matching_skills_results': matching_skills_results}, status=status.HTTP_200_OK)
+
+
+class GetDbSkillsView(APIView, LimitOffsetPagination):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args,):
+
+        db_skills = Skill.objects.filter(
+            isSkill=True).values_list('name', flat=True)
+        # db_skills_list = [skill['name'] for skill in db_skills_objects]
+
+        return Response(db_skills, status=status.HTTP_200_OK)
+
+
+class GetDbNotSkillTokensView(APIView, LimitOffsetPagination):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args,):
+        db_skills = Skill.objects.filter(
+            isSkill=False).values_list('name', flat=True)
+        # db_skills_list = [skill['name'] for skill in db_skills_objects]
+
+        return Response(db_skills, status=status.HTTP_200_OK)
+
+
+class GetDbSkillTokensView(APIView, LimitOffsetPagination):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args,):
+
+        db_skills = Skill.objects.all().values_list('name', flat=True)
+        # db_skills_list = [skill['name'] for skill in db_skills_objects]
+
+        return Response(db_skills, status=status.HTTP_200_OK)
