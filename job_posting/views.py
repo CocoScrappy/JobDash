@@ -64,16 +64,16 @@ def get_matching_skills(input_text, skills):
     word_tokens = vectorizer.get_feature_names_out()
 
     # we create a set to keep the results in.
-    found_skills = set()
+    matching_skills = set()
 
     # we search for each token in our skills
     for token in word_tokens:
         if token.lower() in skills:
-            found_skills.add(token.lower())
+            matching_skills.add(token.lower())
 
-    not_found_skills = set(skills.difference(found_skills))
+    missing_skills = set(skills.difference(matching_skills))
 
-    return {'found_skills': found_skills, 'missing_skills': not_found_skills}
+    return {'matching_skills': matching_skills, 'missing_skills': missing_skills}
 
 
 def skill_exists(skill):
@@ -271,8 +271,8 @@ class JobMatchView(APIView, LimitOffsetPagination):
         matching_skills_results = get_matching_skills(
             resume_text, required_skills)
         matching_score = len(
-            matching_skills_results['found_skills'])*100/len(required_skills)
-        matching_score = round(matching_score, 2)
+            matching_skills_results['matching_skills'])*100/len(required_skills)
+        matching_score = round(matching_score, 0)
 
         return Response({"matching_score": matching_score, 'matching_skills_results': matching_skills_results}, status=status.HTTP_200_OK)
 
