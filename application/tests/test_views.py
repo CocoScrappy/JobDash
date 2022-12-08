@@ -123,9 +123,13 @@ class ApplicationViewsTest(APITestCase):
         response status would be 401
         '''
         refresh = RefreshToken.for_user(self.applicant2)
+        # token of user 2
         token = {"HTTP_AUTHORIZATION": f'Bearer {refresh.access_token}'}
+        # aplication of user 1
         url = '/api/applications/{}/details/'.format(self.application1.id)
+        # user 2 trying to view application of user 1
         response = self.client.get(url, **token)
+        # should return unauthorized status
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unauthenticated_user_cannot_view_applications(self):
