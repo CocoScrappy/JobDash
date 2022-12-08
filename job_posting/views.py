@@ -13,10 +13,11 @@ import requests
 import html2text
 from sklearn.feature_extraction.text import CountVectorizer
 import os
+from decouple import config
+from django.db.models.functions import Lower
 
 
 # Create your views here.
-
 
 def extract_text_from_docx(html):
     h = html2text.HTML2Text()
@@ -34,7 +35,7 @@ def get_matching_skills(input_text, skills):
     vectorizer = CountVectorizer(
         stop_words=compare_html.STOP_WORDS, ngram_range=(1, 2))
     X = vectorizer.fit_transform([input_text])
-    word_tokens = vectorizer.get_feature_names_out()
+    word_tokens = set(vectorizer.get_feature_names_out())
 
     # we create a set to keep the results in.
     matching_skills = set()
@@ -44,28 +45,34 @@ def get_matching_skills(input_text, skills):
         if token.lower() in skills:
             matching_skills.add(token.lower())
 
-    missing_skills = set(skills.difference(matching_skills))
+    missing_skills = skills.difference(matching_skills)
 
     return {'matching_skills': matching_skills, 'missing_skills': missing_skills}
 
 
-def skill_exists(skill):
+def skill_exists(skill, db_skills):
     try:
-        url = f'https://api.apilayer.com/skills?q={skill}&amp;count=1'
-        headers = {'apikey': os.environ.get('SKILLS_API_TOKEN')}
+        url = f'https://api.apilayer.com/skills?q={skill}'
+        headers = {'apikey': config('SKILLS_API_TOKEN')}
         response = requests.request('GET', url, headers=headers)
-        result = response.json()
         # print(response)
         # print(result)
+        # print(len(result))
 
-        if len(result) > 0:
-            for result_skill in result:
-                Skill.objects.create(name=result_skill)
-            return result[0].lower() == skill.lower()
-        else:
-            Skill.objects.create(name=skill, isSkill=False)
+        if response.status_code == 200:
+            result = response.json()
+            if len(result) > 0:
+                result = set([skill.lower() for skill in result])
+                result_skills_not_in_db = result.difference(db_skills)
+                # print(result_skills_not_in_db)
+                for result_skill in result_skills_not_in_db:
+                    # print(result_skill)
+                    Skill.objects.create(name=result_skill.lower())
+                return True
+        return False
     except Exception as e:
-        return True
+        print('Error: ' + getattr(e, 'message', repr(e)))
+        return False
 
 
 def extract_skills(input_text):
@@ -81,10 +88,25 @@ def extract_skills(input_text):
     required_skills = word_tokens.intersection(db_skills)
     tokens_not_in_db = word_tokens.difference(db_tokens)
 
+    # print(tokens_not_in_db)
     # we search for each token in our skills database
     for token in tokens_not_in_db:
-        if skill_exists(token.lower()):
+        if token.lower() in db_skills:
+            print(token + " found in DB skills")
             required_skills.add(token.lower())
+        elif skill_exists(token.lower(), db_skills):
+            print(token + " found in API")
+            required_skills.add(token.lower())
+            if (len(Skill.objects.filter(name=token.lower())) < 1):
+                print(token + " storing in DB as skill")
+                Skill.objects.create(name=token.lower())
+                print(token + " saved in DB")
+        else:
+            print(token + " not in DB or API")
+            if (len(Skill.objects.filter(name=token.lower())) < 1):
+                print(token + " storing in DB as not skill")
+                Skill.objects.create(name=token.lower(), isSkill=False)
+                print(token + " saved in DB")
 
     return required_skills
 
@@ -202,25 +224,30 @@ class JobMatchView(APIView, LimitOffsetPagination):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args,):
-        user = request.user
-        jobId = request.data['jobId']
+        try:
+            user = request.user
+            jobId = request.data['jobId']
 
-        resume = CvBasic.objects.get(user=user).content
-        job_description = JobPost.objects.get(pk=jobId).description
+            resume = CvBasic.objects.get(user=user).content
+            job_description = JobPost.objects.get(pk=jobId).description
 
-        resume_text = extract_text_from_docx(resume)
-        job_description_text = extract_text_from_docx(
-            job_description)
+            resume_text = extract_text_from_docx(resume)
+            job_description_text = extract_text_from_docx(
+                job_description)
 
-        required_skills = extract_skills(job_description_text)
-        required_skills = set(required_skills)
-        matching_skills_results = get_matching_skills(
-            resume_text, required_skills)
-        matching_score = len(
-            matching_skills_results['matching_skills'])*100/len(required_skills)
-        matching_score = round(matching_score, 0)
+            required_skills = extract_skills(job_description_text)
+            required_skills = set(required_skills)
+            matching_skills_results = get_matching_skills(
+                resume_text, required_skills)
+            matching_score = len(
+                matching_skills_results['matching_skills'])*100/len(required_skills)
+            matching_score = round(matching_score, 0)
 
-        return Response({"matching_score": matching_score, 'matching_skills_results': matching_skills_results}, status=status.HTTP_200_OK)
+            return Response({"matching_score": matching_score, 'matching_skills_results': matching_skills_results}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(getattr(e, 'message', repr(e)))
+            return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class GetDbSkillsView(APIView, LimitOffsetPagination):
@@ -247,3 +274,53 @@ class GetDbSkillTokensView(APIView, LimitOffsetPagination):
     def get(self, request, *args,):
         db_skills = Skill.objects.all().values_list('name', flat=True)
         return Response(db_skills, status=status.HTTP_200_OK)
+
+
+class SkillsAPIView(APIView, LimitOffsetPagination):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args,):
+        print(config('SKILLS_API_TOKEN'))
+        skill = request.data['skill']
+        db_skills = set(Skill.objects.filter(
+            isSkill=True).values_list('name', flat=True))
+        try:
+            url = f'https://api.apilayer.com/skills?q={skill}'
+            headers = {'apikey': config('SKILLS_API_TOKEN')}
+            response = requests.request('GET', url, headers=headers)
+            print(response)
+            # print(result)
+            # print(len(result))
+
+            if response.status_code == 200:
+                result = response.json()
+                result = set([skill.lower() for skill in result])
+                if len(result) > 0:
+                    result_skills_not_in_db = result.difference(db_skills)
+                    # print(result_skills_not_in_db)
+                    for result_skill in result_skills_not_in_db:
+                        # print(result_skill)
+                        # if (len(Skill.objects.filter(name=result_skill)) < 1):
+                        Skill.objects.create(name=result_skill.lower())
+                    return Response(True, status=status.HTTP_200_OK)
+                else:
+                    if (len(Skill.objects.filter(name=skill)) < 1):
+                        Skill.objects.create(name=skill.lower(), isSkill=False)
+                    return Response(False, status=status.HTTP_200_OK)
+            else:
+                return Response(False, status=status.HTTP_200_OK)
+        except Exception as e:
+            print('Error: ' + getattr(e, 'message', repr(e)))
+            return Response(False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SetDbSkillsLowerCaseView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args,):
+        try:
+            Skill.objects.update(name=Lower('name'))
+            return Response("Success", status=status.HTTP_200_OK)
+        except Exception as e:
+            print('Error: ' + getattr(e, 'message', repr(e)))
+            return Response(False, status=status.HTTP_200_OK)
