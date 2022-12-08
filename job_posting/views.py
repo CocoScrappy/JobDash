@@ -29,25 +29,32 @@ def extract_text_from_docx(html):
     return None
 
 
-def get_matching_skills(input_text, skills):
-    skills = set(skills)
-
+def get_vectorized_word_tokens(input_text, ngram_range):
     vectorizer = CountVectorizer(
-        stop_words=compare_html.STOP_WORDS, ngram_range=(1, 2))
+        stop_words=compare_html.STOP_WORDS, ngram_range=ngram_range)
     X = vectorizer.fit_transform([input_text])
     word_tokens = set(vectorizer.get_feature_names_out())
+    return word_tokens
+
+
+def get_matching_skills(cv_text, job_text):
+
+    cv_tokens = set(get_vectorized_word_tokens(cv_text, (1, 2)))
+    job_tokens = set(get_vectorized_word_tokens(job_text, (1, 2)))
+
+    db_skills = Skill.objects.filter(
+        isSkill=True).values_list('name', flat=True)
 
     # we create a set to keep the results in.
-    matching_skills = set()
+    required_skills = job_tokens.intersection(db_skills)
+    matching_skills = required_skills.intersection(cv_tokens)
 
-    # we search for each token in our skills
-    for token in word_tokens:
-        if token.lower() in skills:
-            matching_skills.add(token.lower())
+    missing_skills = required_skills.difference(cv_tokens)
 
-    missing_skills = skills.difference(matching_skills)
+    matching_score = len(matching_skills)*100/len(required_skills)
+    matching_score = round(matching_score, 0)
 
-    return {'matching_skills': matching_skills, 'missing_skills': missing_skills}
+    return {'matching_score': matching_score, 'matching_skills': matching_skills, 'missing_skills': missing_skills}
 
 
 def skill_exists(skill, db_skills):
@@ -68,7 +75,7 @@ def skill_exists(skill, db_skills):
                 for result_skill in result_skills_not_in_db:
                     # print(result_skill)
                     Skill.objects.create(name=result_skill.lower())
-                return True
+                return result[0].lower() == skill.lower()
         return False
     except Exception as e:
         print('Error: ' + getattr(e, 'message', repr(e)))
@@ -87,14 +94,11 @@ def extract_skills(input_text):
 
     required_skills = word_tokens.intersection(db_skills)
     tokens_not_in_db = word_tokens.difference(db_tokens)
-
+    print("nb of tokens not in db: " + len(tokens_not_in_db))
     # print(tokens_not_in_db)
     # we search for each token in our skills database
     for token in tokens_not_in_db:
-        if token.lower() in db_skills:
-            print(token + " found in DB skills")
-            required_skills.add(token.lower())
-        elif skill_exists(token.lower(), db_skills):
+        if skill_exists(token.lower(), db_skills):
             print(token + " found in API")
             required_skills.add(token.lower())
             if (len(Skill.objects.filter(name=token.lower())) < 1):
@@ -235,15 +239,12 @@ class JobMatchView(APIView, LimitOffsetPagination):
             job_description_text = extract_text_from_docx(
                 job_description)
 
-            required_skills = extract_skills(job_description_text)
-            required_skills = set(required_skills)
+            # required_skills = extract_skills(job_description_text)
+            # required_skills = set(required_skills)
             matching_skills_results = get_matching_skills(
-                resume_text, required_skills)
-            matching_score = len(
-                matching_skills_results['matching_skills'])*100/len(required_skills)
-            matching_score = round(matching_score, 0)
+                resume_text, job_description_text)
 
-            return Response({"matching_score": matching_score, 'matching_skills_results': matching_skills_results}, status=status.HTTP_200_OK)
+            return Response(matching_skills_results, status=status.HTTP_200_OK)
         except Exception as e:
             print(getattr(e, 'message', repr(e)))
             return Response({"message": "WHOOPS, and error occurred; " + getattr(e, 'message', repr(e))},
