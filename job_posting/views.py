@@ -94,9 +94,8 @@ def extract_skills(input_text):
 
     required_skills = word_tokens.intersection(db_skills)
     tokens_not_in_db = word_tokens.difference(db_tokens)
-    print("nb of tokens not in db: " + len(tokens_not_in_db))
-    # print(tokens_not_in_db)
-    # we search for each token in our skills database
+    print("nb of tokens not in db: {}".format(len(tokens_not_in_db)))
+
     for token in tokens_not_in_db:
         if skill_exists(token.lower(), db_skills):
             print(token + " found in API")
@@ -239,7 +238,7 @@ class JobMatchView(APIView, LimitOffsetPagination):
             job_description_text = extract_text_from_docx(
                 job_description)
 
-            # required_skills = extract_skills(job_description_text)
+            extracted_skills = extract_skills(job_description_text)
             # required_skills = set(required_skills)
             matching_skills_results = get_matching_skills(
                 resume_text, job_description_text)
