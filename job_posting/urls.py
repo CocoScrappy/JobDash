@@ -15,4 +15,6 @@ urlpatterns = [
     path('skills/skills/', views.GetDbSkillsView.as_view()),
     path('skills/all', views.GetDbSkillTokensView.as_view()),
     path('skills/not_skills', views.GetDbNotSkillTokensView.as_view()),
+    path('skills/skills_api', views.SkillsAPIView.as_view()),
+    path('skills/to_lower_case/', views.SetDbSkillsLowerCaseView.as_view()),
 ]
