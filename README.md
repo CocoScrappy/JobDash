@@ -24,4 +24,4 @@ Finally, there will be a job search function which will give all the matches wit
 
 Technologies Used 
 
-Jobdash will be built on a React, Python, Django, MySql stack, with hosting done on PythonAnywhere and Database hosting on Azure. 
+Jobdash will be built on a React, Python, Django, MySql stack, with hosting done on Heroku and Database hosting on Azure. 
